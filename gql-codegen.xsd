@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="gqlCodegen" type="gqlCodegenType">
+        <xs:annotation>
+            <xs:documentation>Root Element</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="gqlCodegenType">
+        <xs:sequence>
+            <xs:element name="target" type="targetType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="schema" type="schemaType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="types" type="typesType" minOccurs="0" maxOccurs="1" />
+            <xs:element name="resolvers" type="resolversType" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="targetType">
+        <xs:attribute name="namespacePrefix" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>PSR4 namespace prefix</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="directory" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Target directory</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="schemaType">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="file" type="fileType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="fileType">
+        <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="typesType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="type" type="typeType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="typeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="resolversType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="resolver" type="resolverType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="resolverType">
+        <xs:attribute name="type" type="xs:string" use="required" />
+        <xs:attribute name="field" type="xs:string" use="required" />
+    </xs:complexType>
+</xs:schema>
