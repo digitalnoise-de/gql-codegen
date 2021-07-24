@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GraphQLGenerator;
 
 use GraphQL\Type\Definition\BooleanType;
+use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\FieldDefinition;
 use GraphQL\Type\Definition\FloatType;
 use GraphQL\Type\Definition\IDType;
@@ -38,7 +39,7 @@ final class Processor
     public function process(Config\Config $endpoint): BuildDefinition
     {
         $schema = $this->buildSchema($endpoint->schema);
-        
+
         $arguments = [];
         $resolvers = [];
 
@@ -138,6 +139,7 @@ final class Processor
         switch (get_class($type)) {
             case StringType::class:
             case IDType::class:
+            case EnumType::class:
                 return Scalar::STRING();
             case BooleanType::class:
                 return Scalar::BOOLEAN();
