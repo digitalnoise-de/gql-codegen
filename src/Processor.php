@@ -9,6 +9,7 @@ use GraphQL\Type\Definition\FieldDefinition;
 use GraphQL\Type\Definition\FloatType;
 use GraphQL\Type\Definition\IDType;
 use GraphQL\Type\Definition\InputObjectType;
+use GraphQL\Type\Definition\IntType;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\ObjectType;
@@ -143,6 +144,8 @@ final class Processor
                 return Scalar::STRING();
             case BooleanType::class:
                 return Scalar::BOOLEAN();
+            case IntType::class:
+                return Scalar::INTEGER();
             case FloatType::class:
                 return Scalar::FLOAT();
             case InputObjectType::class:
