@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GraphQLGenerator;
 
 use GraphQL\Type\Definition\BooleanType;
+use GraphQL\Type\Definition\CustomScalarType;
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\FieldDefinition;
 use GraphQL\Type\Definition\FloatType;
@@ -141,6 +142,7 @@ final class Processor
             case StringType::class:
             case IDType::class:
             case EnumType::class:
+            case CustomScalarType::class:
                 return Scalar::STRING();
             case BooleanType::class:
                 return Scalar::BOOLEAN();
