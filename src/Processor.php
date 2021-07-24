@@ -128,11 +128,11 @@ final class Processor
     private function convertType(\GraphQL\Type\Definition\Type $type): Type
     {
         if ($type instanceof NonNull) {
-            return new NonNullable($this->convertType($type->getOfType()));
+            return new NonNullable($this->convertType($type->getWrappedType()));
         }
 
         if ($type instanceof ListOfType) {
-            return new ListType($this->convertType($type->getOfType()));
+            return new ListType($this->convertType($type->getWrappedType()));
         }
 
         switch (get_class($type)) {
