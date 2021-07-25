@@ -38,12 +38,17 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
         $resolve->addBody('switch ($name) {');
 
         foreach ($definition->resolvers as $resolver) {
-            $resolve->addBody(sprintf('    case \'%s.%s\':', $resolver->typeName, $resolver->fieldName));
-            $resolve->addBody(sprintf('        return ($this->%s)(', $resolver->fieldName));
-            if ($resolver->args !== null) {
-                $resolve->addBody(sprintf('            \%s::fromArray($args)', $resolver->args->className));
+            $args = [];
+            if ($resolver->valueType !== null) {
+                $args[] = '$value';
             }
-            $resolve->addBody('        );');
+
+            if ($resolver->args !== null) {
+                $args[] = sprintf('\%s::fromArray($args)', $resolver->args->className);
+            }
+
+            $resolve->addBody(sprintf('    case \'%s.%s\':', $resolver->typeName, $resolver->fieldName));
+            $resolve->addBody(sprintf('        return ($this->%s)(%s);', $resolver->fieldName, implode(', ', $args)));
         }
 
         $resolve->addBody('}');
