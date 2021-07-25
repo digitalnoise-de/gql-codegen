@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\GraphQLGenerator\Generator;
 
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
+use GraphQLGenerator\InputTypeDefinition;
 use GraphQLGenerator\MainResolverDefinition;
 use GraphQLGenerator\ResolverDefinition;
 use GraphQLGenerator\Type\Scalar;
@@ -24,7 +25,7 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
                     'Query',
                     'foo',
                     null,
-                    DummyGeneratedClass::class,
+                    new InputTypeDefinition(DummyGeneratedClass::class, ['output' => Scalar::STRING()]),
                     Scalar::STRING()
                 )
             ]

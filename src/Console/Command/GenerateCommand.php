@@ -36,6 +36,11 @@ final class GenerateCommand extends Command
         }
 
         foreach ($buildDefinition->resolvers as $resolver) {
+            if ($resolver->args !== null) {
+                $output->writeln(printf('- Generating %s', $resolver->args->className));
+                $classDumper->dump($classGenerator->inputType($resolver->args));
+            }
+
             $output->writeln(printf('- Generating %s', $resolver->className));
             $classDumper->dump($classGenerator->resolver($resolver));
         }

@@ -40,8 +40,8 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
         foreach ($definition->resolvers as $resolver) {
             $resolve->addBody(sprintf('    case \'%s.%s\':', $resolver->typeName, $resolver->fieldName));
             $resolve->addBody(sprintf('        return ($this->%s)(', $resolver->fieldName));
-            if ($resolver->argsClassName !== null) {
-                $resolve->addBody(sprintf('            \%s::fromArray($args)', $resolver->argsClassName));
+            if ($resolver->args !== null) {
+                $resolve->addBody(sprintf('            \%s::fromArray($args)', $resolver->args->className));
             }
             $resolve->addBody('        );');
         }

@@ -13,9 +13,9 @@ final class ResolverDefinition
 
     public string $fieldName;
 
-    public ?string $valueType;
+    public ?Type $valueType;
 
-    public ?string $argsClassName;
+    public ?InputTypeDefinition $args;
 
     public Type $returnType;
 
@@ -23,15 +23,15 @@ final class ResolverDefinition
         string $className,
         string $typeName,
         string $fieldName,
-        ?string $valueType,
-        ?string $argsClassName,
+        ?Type $valueType,
+        ?InputTypeDefinition $args,
         Type $returnType
     ) {
-        $this->className     = $className;
-        $this->typeName      = $typeName;
-        $this->fieldName     = $fieldName;
-        $this->valueType     = $valueType;
-        $this->argsClassName = $argsClassName;
-        $this->returnType    = $returnType;
+        $this->className  = $className;
+        $this->typeName   = $typeName;
+        $this->fieldName  = $fieldName;
+        $this->valueType  = $valueType;
+        $this->args       = $args;
+        $this->returnType = $returnType;
     }
 }

@@ -33,9 +33,14 @@ final class ResolverClassGeneratorForPhp74 implements ResolverClassGenerator
 //        $method->setReturnType($resolver->returnType->phpType)
 //            ->setReturnNullable($resolver->returnType->nullable);
 
-        if ($resolver->argsClassName !== null) {
+        if ($resolver->valueType !== null) {
+            $param = $method->addParameter('value');
+            $param->setType($resolver->valueType->className);
+        }
+
+        if ($resolver->args !== null) {
             $param = $method->addParameter('args');
-            $param->setType($resolver->argsClassName);
+            $param->setType($resolver->args->className);
         }
     }
 
