@@ -12,14 +12,14 @@ abstract class ResolverClassGeneratorTest extends ClassGeneratorTestCase
     /**
      * @test
      */
-    public function it_should_generate_the_class(): void
+    public function it_should_generate_the_interface(): void
     {
         $className  = $this->randomClassName();
         $definition = new ResolverDefinition($className, 'Type', 'field', null, null, Scalar::STRING());
 
         $this->generateAndEvaluate($definition);
 
-        self::assertTrue(class_exists($className));
+        self::assertTrue(interface_exists($className));
     }
 
     private function generateAndEvaluate(ResolverDefinition $definition): void

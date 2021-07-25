@@ -6,8 +6,6 @@ namespace GraphQLGenerator\Generator\Php74;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Generator\ResolverClassGenerator;
 use GraphQLGenerator\ResolverDefinition;
-use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 
 final class ResolverClassGeneratorForPhp74 implements ResolverClassGenerator
@@ -18,20 +16,10 @@ final class ResolverClassGeneratorForPhp74 implements ResolverClassGenerator
     {
         $file = new PhpFile();
         $file->setStrictTypes(true);
-        $class = $file->addClass($resolver->className);
-        $class->setFinal(true);
+        $class = $file->addInterface($resolver->className);
 
         $method = $class->addMethod(self::METHOD_NAME);
-
-        $this->addParametersAndReturnType($resolver, $method);
-
-        return new GeneratedClass($resolver->className, (string)$file);
-    }
-
-    private function addParametersAndReturnType(ResolverDefinition $resolver, Method $method): void
-    {
-//        $method->setReturnType($resolver->returnType->phpType)
-//            ->setReturnNullable($resolver->returnType->nullable);
+        $method->setPublic();
 
         if ($resolver->valueType !== null) {
             $param = $method->addParameter('value');
@@ -42,23 +30,7 @@ final class ResolverClassGeneratorForPhp74 implements ResolverClassGenerator
             $param = $method->addParameter('args');
             $param->setType($resolver->args->className);
         }
-    }
 
-    public function update(ResolverDefinition $resolver, ClassType $class): ClassType
-    {
-        $result = clone $class;
-
-        if ($result->hasMethod(self::METHOD_NAME)) {
-            $method = $result->getMethod(self::METHOD_NAME);
-            foreach ($method->getParameters() as $parameter) {
-                $method->removeParameter($parameter->getName());
-            }
-        } else {
-            $method = $result->addMethod(self::METHOD_NAME);
-        }
-
-        $this->addParametersAndReturnType($resolver, $method);
-
-        return $result;
+        return new GeneratedClass($resolver->className, (string)$file);
     }
 }
