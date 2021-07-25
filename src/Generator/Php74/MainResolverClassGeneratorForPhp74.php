@@ -53,6 +53,20 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
 
         $resolve->addBody('}');
 
+        $canResolve = $class->addMethod('canResolve');
+        $canResolve->setReturnType('bool');
+        $canResolve->addParameter('type')
+            ->setType('string');
+        $canResolve->addParameter('field')
+            ->setType('string');
+
+        $resolverNames = [];
+        foreach ($definition->resolvers as $resolver) {
+            $resolverNames[] = sprintf('%s.%s', $resolver->typeName, $resolver->fieldName);
+        }
+
+        $canResolve->addBody('return in_array($type . \'.\' . $field, ?);', [$resolverNames]);
+
         return new GeneratedClass($definition->className, (string)$file);
     }
 }
