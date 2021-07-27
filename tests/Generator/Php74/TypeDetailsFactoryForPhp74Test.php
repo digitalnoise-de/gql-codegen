@@ -6,6 +6,7 @@ namespace Tests\GraphQLGenerator\Generator\Php74;
 use Generator;
 use GraphQLGenerator\Generator\Php74\TypeDetailsFactoryForPhp74;
 use GraphQLGenerator\Generator\TypeDetails;
+use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
@@ -37,20 +38,29 @@ final class TypeDetailsFactoryForPhp74Test extends TestCase
             new NonNullable(Scalar::STRING()),
             new TypeDetails('string', false, null)
         ];
+
         yield 'bool' => [
             new NonNullable(Scalar::BOOLEAN()),
             new TypeDetails('bool', false, null)
         ];
+
         yield 'int' => [
             new NonNullable(Scalar::INTEGER()),
             new TypeDetails('int', false, null)
         ];
+
         yield 'float' => [
             new NonNullable(Scalar::FLOAT()),
             new TypeDetails('float', false, null)
         ];
+
         yield 'generated class' => [
             new NonNullable(new GeneratedClassType('My\Classname')),
+            new TypeDetails('\My\Classname', false, null)
+        ];
+
+        yield 'existing class' => [
+            new NonNullable(new ExistingClassType('My\Classname')),
             new TypeDetails('\My\Classname', false, null)
         ];
 
@@ -80,6 +90,11 @@ final class TypeDetailsFactoryForPhp74Test extends TestCase
             new TypeDetails('\My\Classname', true, null)
         ];
 
+        yield 'nullable existing class' => [
+            new ExistingClassType('My\Classname'),
+            new TypeDetails('\My\Classname', true, null)
+        ];
+
 
         yield 'list of strings' => [
             new NonNullable(new ListType(new NonNullable(Scalar::STRING()))),
@@ -103,6 +118,11 @@ final class TypeDetailsFactoryForPhp74Test extends TestCase
 
         yield 'list of generated class' => [
             new NonNullable(new ListType(new NonNullable(new GeneratedClassType('My\Classname')))),
+            new TypeDetails('array', false, 'list<\My\Classname>')
+        ];
+
+        yield 'list of existing class' => [
+            new NonNullable(new ListType(new NonNullable(new ExistingClassType('My\Classname')))),
             new TypeDetails('array', false, 'list<\My\Classname>')
         ];
 
@@ -132,6 +152,11 @@ final class TypeDetailsFactoryForPhp74Test extends TestCase
             new TypeDetails('array', false, 'list<\My\Classname|null>')
         ];
 
+        yield 'list of nullable existing class' => [
+            new NonNullable(new ListType(new ExistingClassType('My\Classname'))),
+            new TypeDetails('array', false, 'list<\My\Classname|null>')
+        ];
+
 
         yield 'nullable list of strings' => [
             new ListType(new NonNullable(Scalar::STRING())),
@@ -158,6 +183,11 @@ final class TypeDetailsFactoryForPhp74Test extends TestCase
             new TypeDetails('array', true, 'list<\My\Classname>|null')
         ];
 
+        yield 'nullable list of existing class' => [
+            new ListType(new NonNullable(new ExistingClassType('My\Classname'))),
+            new TypeDetails('array', true, 'list<\My\Classname>|null')
+        ];
+
 
         yield 'nullable list of nullable strings' => [
             new ListType(Scalar::STRING()),
@@ -181,6 +211,11 @@ final class TypeDetailsFactoryForPhp74Test extends TestCase
 
         yield 'nullable list of nullable generated class' => [
             new ListType(new GeneratedClassType('My\Classname')),
+            new TypeDetails('array', true, 'list<\My\Classname|null>|null')
+        ];
+
+        yield 'nullable list of nullable existing class' => [
+            new ListType(new ExistingClassType('My\Classname')),
             new TypeDetails('array', true, 'list<\My\Classname|null>|null')
         ];
     }

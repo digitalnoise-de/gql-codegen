@@ -21,6 +21,15 @@ final class ResolverClassGeneratorForPhp74 implements ResolverClassGenerator
         $method = $class->addMethod(self::METHOD_NAME);
         $method->setPublic();
 
+        $returnType = TypeDetailsFactoryForPhp74::create($resolver->returnType);
+
+        $method->setReturnType($returnType->phpType);
+        $method->setReturnNullable($returnType->nullable);
+
+        if ($returnType->docBlockType !== null) {
+            $method->addComment(sprintf('@return %s', $returnType->docBlockType));
+        }
+
         if ($resolver->valueType !== null) {
             $param = $method->addParameter('value');
             $param->setType($resolver->valueType->className);

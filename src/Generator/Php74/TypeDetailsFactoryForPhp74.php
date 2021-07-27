@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GraphQLGenerator\Generator\Php74;
 
 use GraphQLGenerator\Generator\TypeDetails;
+use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
@@ -33,6 +34,10 @@ final class TypeDetailsFactoryForPhp74
         }
 
         if ($type instanceof GeneratedClassType) {
+            return new TypeDetails('\\' . $type->className, $nullable, null);
+        }
+
+        if ($type instanceof ExistingClassType) {
             return new TypeDetails('\\' . $type->className, $nullable, null);
         }
 
