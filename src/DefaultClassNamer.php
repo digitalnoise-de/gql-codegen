@@ -17,9 +17,9 @@ final class DefaultClassNamer implements ClassNamer
         return sprintf('%s\\Type\\%s', $this->namespacePrefix, ucfirst($typeName));
     }
 
-    public function argumentType(string $fieldName): string
+    public function argumentType(string $typeName, string $fieldName): string
     {
-        return sprintf('%s\\Type\\%sArguments', $this->namespacePrefix, ucfirst($fieldName));
+        return sprintf('%s\\Resolver\\%s\%sArguments', $this->namespacePrefix, ucfirst($typeName), ucfirst($fieldName));
     }
 
     public function resolver(string $typeName, string $fieldName): string

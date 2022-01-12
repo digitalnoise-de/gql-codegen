@@ -167,7 +167,7 @@ final class Processor
 
         $argumentClass = null;
         if (count($field->args) > 0) {
-            $argumentClass = $this->argumentTypeDefinition($field, $classNamer);
+            $argumentClass = $this->argumentTypeDefinition($type, $field, $classNamer);
         }
 
         return new ResolverDefinition(
@@ -180,13 +180,13 @@ final class Processor
         );
     }
 
-    private function argumentTypeDefinition(FieldDefinition $field, ClassNamer $classNamer): InputTypeDefinition
+    private function argumentTypeDefinition(\GraphQL\Type\Definition\Type $type, FieldDefinition $field, ClassNamer $classNamer): InputTypeDefinition
     {
         $fields = [];
         foreach ($field->args as $arg) {
             $fields[$arg->name] = $this->convertType($arg->getType());
         }
 
-        return new InputTypeDefinition($classNamer->argumentType($field->name), $fields);
+        return new InputTypeDefinition($classNamer->argumentType($type->name, $field->name), $fields);
     }
 }
