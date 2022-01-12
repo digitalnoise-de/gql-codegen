@@ -3,15 +3,12 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Config;
 
-/**
- * @psalm-immutable
- */
 final class Schema
 {
     /**
      * @var list<string>
      */
-    public array $files;
+    private array $files;
 
     /**
      * @param list<string> $files
@@ -19,5 +16,16 @@ final class Schema
     public function __construct(array $files)
     {
         $this->files = $files;
+    }
+
+    public function content(): string
+    {
+        $content = '';
+
+        foreach ($this->files as $file) {
+            $content .= file_get_contents($file);
+        }
+
+        return $content;
     }
 }

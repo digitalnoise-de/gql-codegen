@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GraphQLGenerator\Console\Command;
 
 use GraphQLGenerator\Config\Config;
+use GraphQLGenerator\DefaultClassNamer;
 use GraphQLGenerator\Generator\ClassGenerator;
 use GraphQLGenerator\Processor;
 use GraphQLGenerator\Psr4ClassDumper;
@@ -24,9 +25,14 @@ final class GenerateCommand extends Command
     {
         $config = Config::fromXmlFile('gql-codegen.xml');
 
+        $classNamer  = new DefaultClassNamer($config->target->namespacePrefix);
         $classDumper = new Psr4ClassDumper($config->target->namespacePrefix, $config->target->directory);
 
-        $buildDefinition = (new Processor())->process($config);
+        $buildDefinition = (new Processor($classNamer))->process(
+            $config->schema->content(),
+            $config->types,
+            $config->resolvers
+        );
 
         $classGenerator = ClassGenerator::forPhp74();
 

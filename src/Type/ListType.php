@@ -17,4 +17,9 @@ final class ListType implements Type
     {
         $this->elementType = $elementType;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('List<%s>', (string)$this->elementType);
+    }
 }

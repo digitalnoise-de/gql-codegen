@@ -19,7 +19,7 @@ final class ConfigTest extends TestCase
     /**
      * @test
      */
-    public function dummy(): void
+    public function it_should_parse_a_configuration(): void
     {
         $root = vfsStream::setup();
         $file = new vfsStreamFile('config.xml');
@@ -51,7 +51,7 @@ final class ConfigTest extends TestCase
         self::assertEquals(
             [
                 'Article' => 'App\\Model\\Article',
-                'User'    => 'App\\Model\\User'
+                'User'    => 'App\\Model\\User',
             ],
             $config->types
         );

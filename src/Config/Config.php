@@ -6,6 +6,9 @@ namespace GraphQLGenerator\Config;
 use DOMDocument;
 use SimpleXMLElement;
 
+/**
+ * @psalm-immutable
+ */
 final class Config
 {
     public Target $target;
@@ -23,8 +26,8 @@ final class Config
     public array $resolvers;
 
     /**
-     * @param array<string, class-string> $types
-     * @param list<Resolver>              $resolvers
+     * @param array<string, string> $types
+     * @param list<Resolver> $resolvers
      */
     public function __construct(Target $target, Schema $schema, array $types, array $resolvers)
     {
@@ -46,6 +49,7 @@ final class Config
 
         $config = simplexml_import_dom($domDocument);
 
+        /** @psalm-suppress MixedArgument */
         return new self(
             self::target($config->target),
             self::schema($config->schema),
@@ -59,7 +63,7 @@ final class Config
      */
     private static function validate(DOMDocument $document): void
     {
-        $schemaFile = dirname(__DIR__, 2) . '/gql-codegen.xsd';
+        $schemaFile = dirname(__DIR__, 2).'/gql-codegen.xsd';
 
         libxml_use_internal_errors(true);
 

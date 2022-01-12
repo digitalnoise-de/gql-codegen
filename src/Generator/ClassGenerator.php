@@ -3,24 +3,24 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Generator;
 
+use GraphQLGenerator\Build\InputTypeDefinition;
+use GraphQLGenerator\Build\MainResolverDefinition;
+use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\Php74\InputTypeClassGeneratorForPhp74;
 use GraphQLGenerator\Generator\Php74\MainResolverClassGeneratorForPhp74;
-use GraphQLGenerator\Generator\Php74\ResolverClassGeneratorForPhp74;
-use GraphQLGenerator\InputTypeDefinition;
-use GraphQLGenerator\MainResolverDefinition;
-use GraphQLGenerator\ResolverDefinition;
+use GraphQLGenerator\Generator\Php74\ResolverInterfaceGeneratorForPhp74;
 
 final class ClassGenerator
 {
     private InputTypeClassGenerator $inputTypeClassGenerator;
 
-    private ResolverClassGenerator $resolverClassGenerator;
+    private ResolverInterfaceGenerator $resolverClassGenerator;
 
     private MainResolverClassGenerator $mainResolverClassGenerator;
 
     public function __construct(
-        InputTypeClassGenerator $inputTypeClassGenerator,
-        ResolverClassGenerator $resolverClassGenerator,
+        InputTypeClassGenerator    $inputTypeClassGenerator,
+        ResolverInterfaceGenerator $resolverClassGenerator,
         MainResolverClassGenerator $mainResolverClassGenerator
     ) {
         $this->inputTypeClassGenerator    = $inputTypeClassGenerator;
@@ -32,7 +32,7 @@ final class ClassGenerator
     {
         return new self(
             new InputTypeClassGeneratorForPhp74(),
-            new ResolverClassGeneratorForPhp74(),
+            new ResolverInterfaceGeneratorForPhp74(),
             new MainResolverClassGeneratorForPhp74()
         );
     }

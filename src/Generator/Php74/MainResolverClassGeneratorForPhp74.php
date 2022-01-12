@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Generator\Php74;
 
+use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
-use GraphQLGenerator\MainResolverDefinition;
 use Nette\PhpGenerator\PhpFile;
 
 final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGenerator

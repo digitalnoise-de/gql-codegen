@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Generator\Php74;
 
+use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
-use GraphQLGenerator\Generator\ResolverClassGenerator;
-use GraphQLGenerator\ResolverDefinition;
+use GraphQLGenerator\Generator\ResolverInterfaceGenerator;
 use Nette\PhpGenerator\PhpFile;
 
-final class ResolverClassGeneratorForPhp74 implements ResolverClassGenerator
+final class ResolverInterfaceGeneratorForPhp74 implements ResolverInterfaceGenerator
 {
     private const METHOD_NAME = '__invoke';
 
@@ -31,8 +31,11 @@ final class ResolverClassGeneratorForPhp74 implements ResolverClassGenerator
         }
 
         if ($resolver->valueType !== null) {
+            $valueType = TypeDetailsFactoryForPhp74::create($resolver->valueType);
+
             $param = $method->addParameter('value');
-            $param->setType($resolver->valueType->className);
+            $param->setType($valueType->phpType);
+            $param->setNullable($valueType->nullable);
         }
 
         if ($resolver->args !== null) {

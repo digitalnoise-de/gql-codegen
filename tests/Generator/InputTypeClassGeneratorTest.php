@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Tests\GraphQLGenerator\Generator;
 
 use Generator;
+use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Generator\InputTypeClassGenerator;
-use GraphQLGenerator\InputTypeDefinition;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;

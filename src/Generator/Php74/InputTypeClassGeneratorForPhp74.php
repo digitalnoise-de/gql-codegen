@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Generator\Php74;
 
+use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Generator\InputTypeClassGenerator;
-use GraphQLGenerator\InputTypeDefinition;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;

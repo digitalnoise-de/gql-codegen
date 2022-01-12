@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\GraphQLGenerator\Generator;
 
-use GraphQLGenerator\Generator\ResolverClassGenerator;
-use GraphQLGenerator\ResolverDefinition;
+use GraphQLGenerator\Build\ResolverDefinition;
+use GraphQLGenerator\Generator\ResolverInterfaceGenerator;
 use GraphQLGenerator\Type\Scalar;
 
 abstract class ResolverClassGeneratorTest extends ClassGeneratorTestCase
@@ -31,5 +31,5 @@ abstract class ResolverClassGeneratorTest extends ClassGeneratorTestCase
         eval($code);
     }
 
-    abstract protected function subject(): ResolverClassGenerator;
+    abstract protected function subject(): ResolverInterfaceGenerator;
 }

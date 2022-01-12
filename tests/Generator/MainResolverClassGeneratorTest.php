@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Tests\GraphQLGenerator\Generator;
 
+use GraphQLGenerator\Build\InputTypeDefinition;
+use GraphQLGenerator\Build\MainResolverDefinition;
+use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
-use GraphQLGenerator\InputTypeDefinition;
-use GraphQLGenerator\MainResolverDefinition;
-use GraphQLGenerator\ResolverDefinition;
 use GraphQLGenerator\Type\Scalar;
 
 abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase

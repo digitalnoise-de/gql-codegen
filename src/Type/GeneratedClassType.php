@@ -14,4 +14,9 @@ final class GeneratedClassType implements Type
     {
         $this->className = $className;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('GeneratedClass<%s>', $this->className);
+    }
 }

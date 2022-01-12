@@ -17,4 +17,9 @@ final class NonNullable implements Type
     {
         $this->elementType = $elementType;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('NonNullable<%s>', (string)$this->elementType);
+    }
 }

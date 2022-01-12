@@ -6,15 +6,20 @@ namespace GraphQLGenerator\Type;
 final class ExistingClassType implements Type
 {
     /**
-     * @var class-string
+     * @var string
      */
     public string $className;
 
     /**
-     * @param class-string $className
+     * @param string $className
      */
     public function __construct(string $className)
     {
         $this->className = $className;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('ExistingClass<%s>', $this->className);
     }
 }

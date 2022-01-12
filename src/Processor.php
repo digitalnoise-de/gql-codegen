@@ -17,7 +17,11 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\StringType;
 use GraphQL\Type\Schema;
 use GraphQL\Utils\BuildSchema;
-use GraphQLGenerator\Config;
+use GraphQLGenerator\Build\BuildDefinition;
+use GraphQLGenerator\Build\InputTypeDefinition;
+use GraphQLGenerator\Build\MainResolverDefinition;
+use GraphQLGenerator\Build\ResolverDefinition;
+use GraphQLGenerator\Config\Resolver;
 use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
@@ -28,6 +32,8 @@ use RuntimeException;
 
 final class Processor
 {
+    private ClassNamer $classNamer;
+
     /**
      * @var array<string, GeneratedClassType>
      */
@@ -38,79 +44,71 @@ final class Processor
      */
     private array $types = [];
 
-    public function process(Config\Config $config): BuildDefinition
+    public function __construct(ClassNamer $classNamer)
     {
-        $classNamer = new DefaultClassNamer($config->target->namespacePrefix);
-        $schema     = $this->buildSchema($config->schema);
+        $this->classNamer = $classNamer;
+    }
 
-        $inputTypes = [];
-        $resolvers  = [];
+    /**
+     * @param array<string, string> $types
+     * @param list<Resolver> $resolvers
+     */
+    public function process(string $schemaContent, array $types, array $resolvers): BuildDefinition
+    {
+        $schema = BuildSchema::build($schemaContent);
 
-        foreach ($config->types as $type => $class) {
+        foreach ($types as $type => $class) {
             $this->types[$type] = new ExistingClassType($class);
         }
 
         foreach ($schema->getTypeMap() as $type) {
             if ($type instanceof InputObjectType) {
-                $this->inputTypes[$type->name] = new GeneratedClassType($classNamer->inputType($type->name));
+                $this->inputTypes[$type->name] = new GeneratedClassType($this->classNamer->inputType($type->name));
             }
         }
+
+        $inputDefs       = $this->inputDefinitions($schema);
+        $resolverDefs    = $this->resolverDefinitions($schema, $resolvers);
+        $mainResolverDef = new MainResolverDefinition($this->classNamer->mainResolver(), $resolverDefs);
+
+        return new BuildDefinition($inputDefs, $resolverDefs, $mainResolverDef);
+    }
+
+    /**
+     * @return list<InputTypeDefinition>
+     */
+    private function inputDefinitions(Schema $schema): array
+    {
+        $result = [];
 
         foreach ($schema->getTypeMap() as $type) {
             if ($type instanceof InputObjectType) {
-                $inputTypes[] = $this->inputTypeDefinition($type, $classNamer);
+                $result[] = $this->inputTypeDefinition($type);
             }
         }
 
-        foreach ($config->resolvers as $resolver) {
-            $type = $schema->getType($resolver->type);
-            if ($type === null) {
-                throw new RuntimeException('Type does not exist: ' . $resolver->type);
-            }
-
-            if (!$type instanceof ObjectType) {
-                throw new RuntimeException('Invalid type: ' . get_class($type));
-            }
-
-            if (!$type->hasField($resolver->field)) {
-                throw new RuntimeException('Field missing: ' . $resolver->field);
-            }
-
-            $resolvers[] = $this->resolverDefinition($schema, $type, $type->getField($resolver->field), $classNamer);
-        }
-
-        $mainResolver = new MainResolverDefinition($classNamer->mainResolver(), $resolvers);
-
-        return new BuildDefinition($inputTypes, $resolvers, $mainResolver);
+        return $result;
     }
 
-    private function buildSchema(Config\Schema $schema): Schema
-    {
-        $schemaContent = '';
-        foreach ($schema->files as $schemaFile) {
-            $schemaContent .= file_get_contents($schemaFile) . PHP_EOL;
-        }
-
-        return BuildSchema::build($schemaContent);
-    }
-
-    private function inputTypeDefinition(InputObjectType $type, ClassNamer $classNamer): InputTypeDefinition
+    private function inputTypeDefinition(InputObjectType $type): InputTypeDefinition
     {
         $fields = [];
         foreach ($type->getFields() as $field) {
             $fields[$field->name] = $this->convertType($field->getType());
         }
 
-        return new InputTypeDefinition($classNamer->inputType($type->name), $fields);
+        return new InputTypeDefinition($this->classNamer->inputType($type->name), $fields);
     }
 
     private function convertType(\GraphQL\Type\Definition\Type $type): Type
     {
         if ($type instanceof NonNull) {
+            /** @psalm-suppress ArgumentTypeCoercion */
             return new NonNullable($this->convertType($type->getWrappedType()));
         }
 
         if ($type instanceof ListOfType) {
+            /** @psalm-suppress ArgumentTypeCoercion */
             return new ListType($this->convertType($type->getWrappedType()));
         }
 
@@ -153,11 +151,38 @@ final class Processor
         return $this->types[$type->name];
     }
 
+    /**
+     * @param list<Resolver> $resolvers
+     * @return list<ResolverDefinition>
+     */
+    private function resolverDefinitions(Schema $schema, array $resolvers): array
+    {
+        $result = [];
+
+        foreach ($resolvers as $resolver) {
+            $type = $schema->getType($resolver->type);
+            if ($type === null) {
+                throw new RuntimeException('Type does not exist: '.$resolver->type);
+            }
+
+            if (!$type instanceof ObjectType) {
+                throw new RuntimeException('Invalid type: '.get_class($type));
+            }
+
+            if (!$type->hasField($resolver->field)) {
+                throw new RuntimeException('Field missing: '.$resolver->field);
+            }
+
+            $result[] = $this->resolverDefinition($schema, $type, $type->getField($resolver->field));
+        }
+
+        return $result;
+    }
+
     private function resolverDefinition(
         Schema $schema,
         \GraphQL\Type\Definition\Type $type,
-        FieldDefinition $field,
-        ClassNamer $classNamer
+        FieldDefinition $field
     ): ResolverDefinition {
         if ($schema->getQueryType() === $type || $schema->getMutationType() === $type) {
             $value = null;
@@ -167,11 +192,11 @@ final class Processor
 
         $argumentClass = null;
         if (count($field->args) > 0) {
-            $argumentClass = $this->argumentTypeDefinition($type, $field, $classNamer);
+            $argumentClass = $this->argumentTypeDefinition($type, $field);
         }
 
         return new ResolverDefinition(
-            $classNamer->resolver($type->name, $field->name),
+            $this->classNamer->resolver($type->name, $field->name),
             $type->name,
             $field->name,
             $value,
@@ -180,13 +205,15 @@ final class Processor
         );
     }
 
-    private function argumentTypeDefinition(\GraphQL\Type\Definition\Type $type, FieldDefinition $field, ClassNamer $classNamer): InputTypeDefinition
-    {
+    private function argumentTypeDefinition(
+        \GraphQL\Type\Definition\Type $type,
+        FieldDefinition $field
+    ): InputTypeDefinition {
         $fields = [];
         foreach ($field->args as $arg) {
             $fields[$arg->name] = $this->convertType($arg->getType());
         }
 
-        return new InputTypeDefinition($classNamer->argumentType($type->name, $field->name), $fields);
+        return new InputTypeDefinition($this->classNamer->argumentType($type->name, $field->name), $fields);
     }
 }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Generator;
 
-use GraphQLGenerator\InputTypeDefinition;
+use GraphQLGenerator\Build\InputTypeDefinition;
 
 interface InputTypeClassGenerator
 {
