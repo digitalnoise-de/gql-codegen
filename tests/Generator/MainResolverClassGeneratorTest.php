@@ -14,20 +14,13 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
     /**
      * @test
      */
-    public function yo(): void
+    public function resolver_should_be_executed(): void
     {
         $className  = $this->randomClassName();
         $definition = new MainResolverDefinition(
             $className,
             [
-                new ResolverDefinition(
-                    DummyResolver::class,
-                    'Query',
-                    'foo',
-                    null,
-                    new InputTypeDefinition(DummyGeneratedClass::class, ['output' => Scalar::STRING()]),
-                    Scalar::STRING()
-                )
+                $this->dummyResolverDefinition('Query', 'foo'),
             ]
         );
 
@@ -41,6 +34,18 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
         self::assertSame('Hello', $result);
     }
 
+    private function dummyResolverDefinition(string $type, string $field): ResolverDefinition
+    {
+        return new ResolverDefinition(
+            DummyResolver::class,
+            $type,
+            $field,
+            null,
+            new InputTypeDefinition(DummyGeneratedClass::class, ['output' => Scalar::STRING()]),
+            Scalar::STRING()
+        );
+    }
+
     private function generateAndEvaluate(MainResolverDefinition $definition): void
     {
         $generatedClass = $this->subject()->generate($definition);
@@ -51,4 +56,26 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
     }
 
     abstract protected function subject(): MainResolverClassGenerator;
+
+    /**
+     * @test
+     */
+    public function fields_with_the_same_name_of_different_types_should_be_resolved_properly(): void
+    {
+        $className  = $this->randomClassName();
+        $definition = new MainResolverDefinition(
+            $className,
+            [
+                $this->dummyResolverDefinition('A', 'foo'),
+                $this->dummyResolverDefinition('B', 'foo'),
+            ]
+        );
+
+        $this->generateAndEvaluate($definition);
+
+        $mainResolver = new $className(new DummyResolver('A: '), new DummyResolver('B: '));
+
+        self::assertSame('A: Hello', $mainResolver->resolve('A', 'foo', null, ['output' => 'Hello']));
+        self::assertSame('B: Hello', $mainResolver->resolve('B', 'foo', null, ['output' => 'Hello']));
+    }
 }

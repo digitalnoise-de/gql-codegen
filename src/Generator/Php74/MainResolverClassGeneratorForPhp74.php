@@ -18,9 +18,11 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
 
         $ctor = $class->addMethod('__construct');
         foreach ($definition->resolvers as $resolver) {
-            $class->addProperty($resolver->fieldName)->setType($resolver->className);
-            $ctor->addParameter($resolver->fieldName)->setType($resolver->className);
-            $ctor->addBody(sprintf('$this->%s = $%s;', $resolver->fieldName, $resolver->fieldName));
+            $name = lcfirst($resolver->typeName).ucfirst($resolver->fieldName);
+
+            $class->addProperty($name)->setType($resolver->className);
+            $ctor->addParameter($name)->setType($resolver->className);
+            $ctor->addBody(sprintf('$this->%s = $%s;', $name, $name));
         }
 
         $resolve = $class->addMethod('resolve');
@@ -38,6 +40,8 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
         $resolve->addBody('switch ($name) {');
 
         foreach ($definition->resolvers as $resolver) {
+            $name = lcfirst($resolver->typeName).ucfirst($resolver->fieldName);
+
             $args = [];
             if ($resolver->valueType !== null) {
                 $args[] = '$value';
@@ -48,7 +52,7 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
             }
 
             $resolve->addBody(sprintf('    case \'%s.%s\':', $resolver->typeName, $resolver->fieldName));
-            $resolve->addBody(sprintf('        return ($this->%s)(%s);', $resolver->fieldName, implode(', ', $args)));
+            $resolve->addBody(sprintf('        return ($this->%s)(%s);', $name, implode(', ', $args)));
         }
 
         $resolve->addBody('}');
