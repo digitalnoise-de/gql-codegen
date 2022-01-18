@@ -14,6 +14,6 @@ final class DummyResolver
 
     public function __invoke(DummyGeneratedClass $input)
     {
-        return $this->prefix.$input->data['output'];
+        return $this->prefix . $input->data['output'];
     }
 }

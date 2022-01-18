@@ -5,15 +5,9 @@ namespace GraphQLGenerator\Type;
 
 final class ListType implements Type
 {
-    /**
-     * @var NonNullable|Scalar|GeneratedClassType
-     */
-    public object $elementType;
+    public NonNullable|ScalarType|GeneratedClassType|ExistingClassType $elementType;
 
-    /**
-     * @param NonNullable|Scalar|GeneratedClassType $elementType
-     */
-    public function __construct(object $elementType)
+    public function __construct(NonNullable|ScalarType|GeneratedClassType|ExistingClassType $elementType)
     {
         $this->elementType = $elementType;
     }

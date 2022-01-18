@@ -27,7 +27,7 @@ final class Config
 
     /**
      * @param array<string, string> $types
-     * @param list<Resolver> $resolvers
+     * @param list<Resolver>        $resolvers
      */
     public function __construct(Target $target, Schema $schema, array $types, array $resolvers)
     {
@@ -63,7 +63,7 @@ final class Config
      */
     private static function validate(DOMDocument $document): void
     {
-        $schemaFile = dirname(__DIR__, 2).'/gql-codegen.xsd';
+        $schemaFile = dirname(__DIR__, 2) . '/gql-codegen.xsd';
 
         libxml_use_internal_errors(true);
 

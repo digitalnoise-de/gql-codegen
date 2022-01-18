@@ -15,7 +15,7 @@ use MyCLabs\Enum\Enum;
  * @method static self INTEGER()
  * @method static self FLOAT()
  */
-final class Scalar extends Enum implements Type
+final class ScalarType extends Enum implements Type
 {
     private const STRING  = 'string';
     private const BOOLEAN = 'bool';

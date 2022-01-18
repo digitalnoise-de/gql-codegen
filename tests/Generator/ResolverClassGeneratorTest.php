@@ -5,7 +5,7 @@ namespace Tests\GraphQLGenerator\Generator;
 
 use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\ResolverInterfaceGenerator;
-use GraphQLGenerator\Type\Scalar;
+use GraphQLGenerator\Type\ScalarType;
 
 abstract class ResolverClassGeneratorTest extends ClassGeneratorTestCase
 {
@@ -15,7 +15,7 @@ abstract class ResolverClassGeneratorTest extends ClassGeneratorTestCase
     public function it_should_generate_the_interface(): void
     {
         $className  = $this->randomClassName();
-        $definition = new ResolverDefinition($className, 'Type', 'field', null, null, Scalar::STRING());
+        $definition = new ResolverDefinition($className, 'Type', 'field', null, null, ScalarType::STRING());
 
         $this->generateAndEvaluate($definition);
 

@@ -10,7 +10,7 @@ use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
-use GraphQLGenerator\Type\Scalar;
+use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use PHPUnit\Framework\TestCase;
 
@@ -35,188 +35,183 @@ final class TypeDetailsFactoryForPhp80Test extends TestCase
     public function examples(): Generator
     {
         yield 'string' => [
-            new NonNullable(Scalar::STRING()),
-            new TypeDetails('string', false, null)
+            new NonNullable(ScalarType::STRING()),
+            new TypeDetails('string', false, null),
         ];
 
         yield 'bool' => [
-            new NonNullable(Scalar::BOOLEAN()),
-            new TypeDetails('bool', false, null)
+            new NonNullable(ScalarType::BOOLEAN()),
+            new TypeDetails('bool', false, null),
         ];
 
         yield 'int' => [
-            new NonNullable(Scalar::INTEGER()),
-            new TypeDetails('int', false, null)
+            new NonNullable(ScalarType::INTEGER()),
+            new TypeDetails('int', false, null),
         ];
 
         yield 'float' => [
-            new NonNullable(Scalar::FLOAT()),
-            new TypeDetails('float', false, null)
+            new NonNullable(ScalarType::FLOAT()),
+            new TypeDetails('float', false, null),
         ];
 
         yield 'generated class' => [
             new NonNullable(new GeneratedClassType('My\Classname')),
-            new TypeDetails('\My\Classname', false, null)
+            new TypeDetails('\My\Classname', false, null),
         ];
 
         yield 'existing class' => [
             new NonNullable(new ExistingClassType('My\Classname')),
-            new TypeDetails('\My\Classname', false, null)
+            new TypeDetails('\My\Classname', false, null),
         ];
 
-
         yield 'nullable string' => [
-            Scalar::STRING(),
-            new TypeDetails('string', true, null)
+            ScalarType::STRING(),
+            new TypeDetails('string', true, null),
         ];
 
         yield 'nullable bool' => [
-            Scalar::BOOLEAN(),
-            new TypeDetails('bool', true, null)
+            ScalarType::BOOLEAN(),
+            new TypeDetails('bool', true, null),
         ];
 
         yield 'nullable int' => [
-            Scalar::INTEGER(),
-            new TypeDetails('int', true, null)
+            ScalarType::INTEGER(),
+            new TypeDetails('int', true, null),
         ];
 
         yield 'nullable float' => [
-            Scalar::FLOAT(),
-            new TypeDetails('float', true, null)
+            ScalarType::FLOAT(),
+            new TypeDetails('float', true, null),
         ];
 
         yield 'nullable generated class' => [
             new GeneratedClassType('My\Classname'),
-            new TypeDetails('\My\Classname', true, null)
+            new TypeDetails('\My\Classname', true, null),
         ];
 
         yield 'nullable existing class' => [
             new ExistingClassType('My\Classname'),
-            new TypeDetails('\My\Classname', true, null)
+            new TypeDetails('\My\Classname', true, null),
         ];
 
-
         yield 'list of strings' => [
-            new NonNullable(new ListType(new NonNullable(Scalar::STRING()))),
-            new TypeDetails('array', false, 'list<string>')
+            new NonNullable(new ListType(new NonNullable(ScalarType::STRING()))),
+            new TypeDetails('array', false, 'list<string>'),
         ];
 
         yield 'list of bool' => [
-            new NonNullable(new ListType(new NonNullable(Scalar::BOOLEAN()))),
-            new TypeDetails('array', false, 'list<bool>')
+            new NonNullable(new ListType(new NonNullable(ScalarType::BOOLEAN()))),
+            new TypeDetails('array', false, 'list<bool>'),
         ];
 
         yield 'list of int' => [
-            new NonNullable(new ListType(new NonNullable(Scalar::INTEGER()))),
-            new TypeDetails('array', false, 'list<int>')
+            new NonNullable(new ListType(new NonNullable(ScalarType::INTEGER()))),
+            new TypeDetails('array', false, 'list<int>'),
         ];
 
         yield 'list of float' => [
-            new NonNullable(new ListType(new NonNullable(Scalar::FLOAT()))),
-            new TypeDetails('array', false, 'list<float>')
+            new NonNullable(new ListType(new NonNullable(ScalarType::FLOAT()))),
+            new TypeDetails('array', false, 'list<float>'),
         ];
 
         yield 'list of generated class' => [
             new NonNullable(new ListType(new NonNullable(new GeneratedClassType('My\Classname')))),
-            new TypeDetails('array', false, 'list<\My\Classname>')
+            new TypeDetails('array', false, 'list<\My\Classname>'),
         ];
 
         yield 'list of existing class' => [
             new NonNullable(new ListType(new NonNullable(new ExistingClassType('My\Classname')))),
-            new TypeDetails('array', false, 'list<\My\Classname>')
+            new TypeDetails('array', false, 'list<\My\Classname>'),
         ];
 
-
         yield 'list of nullable strings' => [
-            new NonNullable(new ListType(Scalar::STRING())),
-            new TypeDetails('array', false, 'list<string|null>')
+            new NonNullable(new ListType(ScalarType::STRING())),
+            new TypeDetails('array', false, 'list<string|null>'),
         ];
 
         yield 'list of nullable bool' => [
-            new NonNullable(new ListType(Scalar::BOOLEAN())),
-            new TypeDetails('array', false, 'list<bool|null>')
+            new NonNullable(new ListType(ScalarType::BOOLEAN())),
+            new TypeDetails('array', false, 'list<bool|null>'),
         ];
 
         yield 'list of nullable int' => [
-            new NonNullable(new ListType(Scalar::INTEGER())),
-            new TypeDetails('array', false, 'list<int|null>')
+            new NonNullable(new ListType(ScalarType::INTEGER())),
+            new TypeDetails('array', false, 'list<int|null>'),
         ];
 
         yield 'list of nullable float' => [
-            new NonNullable(new ListType(Scalar::FLOAT())),
-            new TypeDetails('array', false, 'list<float|null>')
+            new NonNullable(new ListType(ScalarType::FLOAT())),
+            new TypeDetails('array', false, 'list<float|null>'),
         ];
 
         yield 'list of nullable generated class' => [
             new NonNullable(new ListType(new GeneratedClassType('My\Classname'))),
-            new TypeDetails('array', false, 'list<\My\Classname|null>')
+            new TypeDetails('array', false, 'list<\My\Classname|null>'),
         ];
 
         yield 'list of nullable existing class' => [
             new NonNullable(new ListType(new ExistingClassType('My\Classname'))),
-            new TypeDetails('array', false, 'list<\My\Classname|null>')
+            new TypeDetails('array', false, 'list<\My\Classname|null>'),
         ];
 
-
         yield 'nullable list of strings' => [
-            new ListType(new NonNullable(Scalar::STRING())),
-            new TypeDetails('array', true, 'list<string>|null')
+            new ListType(new NonNullable(ScalarType::STRING())),
+            new TypeDetails('array', true, 'list<string>|null'),
         ];
 
         yield 'nullable list of bool' => [
-            new ListType(new NonNullable(Scalar::BOOLEAN())),
-            new TypeDetails('array', true, 'list<bool>|null')
+            new ListType(new NonNullable(ScalarType::BOOLEAN())),
+            new TypeDetails('array', true, 'list<bool>|null'),
         ];
 
         yield 'nullable list of int' => [
-            new ListType(new NonNullable(Scalar::INTEGER())),
-            new TypeDetails('array', true, 'list<int>|null')
+            new ListType(new NonNullable(ScalarType::INTEGER())),
+            new TypeDetails('array', true, 'list<int>|null'),
         ];
 
         yield 'nullable list of float' => [
-            new ListType(new NonNullable(Scalar::FLOAT())),
-            new TypeDetails('array', true, 'list<float>|null')
+            new ListType(new NonNullable(ScalarType::FLOAT())),
+            new TypeDetails('array', true, 'list<float>|null'),
         ];
 
         yield 'nullable list of generated class' => [
             new ListType(new NonNullable(new GeneratedClassType('My\Classname'))),
-            new TypeDetails('array', true, 'list<\My\Classname>|null')
+            new TypeDetails('array', true, 'list<\My\Classname>|null'),
         ];
 
         yield 'nullable list of existing class' => [
             new ListType(new NonNullable(new ExistingClassType('My\Classname'))),
-            new TypeDetails('array', true, 'list<\My\Classname>|null')
+            new TypeDetails('array', true, 'list<\My\Classname>|null'),
         ];
 
-
         yield 'nullable list of nullable strings' => [
-            new ListType(Scalar::STRING()),
-            new TypeDetails('array', true, 'list<string|null>|null')
+            new ListType(ScalarType::STRING()),
+            new TypeDetails('array', true, 'list<string|null>|null'),
         ];
 
         yield 'nullable list of nullable bool' => [
-            new ListType(Scalar::BOOLEAN()),
-            new TypeDetails('array', true, 'list<bool|null>|null')
+            new ListType(ScalarType::BOOLEAN()),
+            new TypeDetails('array', true, 'list<bool|null>|null'),
         ];
 
         yield 'nullable list of nullable int' => [
-            new ListType(Scalar::INTEGER()),
-            new TypeDetails('array', true, 'list<int|null>|null')
+            new ListType(ScalarType::INTEGER()),
+            new TypeDetails('array', true, 'list<int|null>|null'),
         ];
 
         yield 'nullable list of nullable float' => [
-            new ListType(Scalar::FLOAT()),
-            new TypeDetails('array', true, 'list<float|null>|null')
+            new ListType(ScalarType::FLOAT()),
+            new TypeDetails('array', true, 'list<float|null>|null'),
         ];
 
         yield 'nullable list of nullable generated class' => [
             new ListType(new GeneratedClassType('My\Classname')),
-            new TypeDetails('array', true, 'list<\My\Classname|null>|null')
+            new TypeDetails('array', true, 'list<\My\Classname|null>|null'),
         ];
 
         yield 'nullable list of nullable existing class' => [
             new ListType(new ExistingClassType('My\Classname')),
-            new TypeDetails('array', true, 'list<\My\Classname|null>|null')
+            new TypeDetails('array', true, 'list<\My\Classname|null>|null'),
         ];
     }
 }

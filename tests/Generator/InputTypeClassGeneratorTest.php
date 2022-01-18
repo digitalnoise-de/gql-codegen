@@ -9,7 +9,7 @@ use GraphQLGenerator\Generator\InputTypeClassGenerator;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
-use GraphQLGenerator\Type\Scalar;
+use GraphQLGenerator\Type\ScalarType;
 
 abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
 {
@@ -43,7 +43,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     public function generated_class_should_only_have_a_constructor_and_a_fromArray_method(): void
     {
         $className  = $this->randomClassName();
-        $definition = new InputTypeDefinition($className, ['names' => new ListType(Scalar::STRING())]);
+        $definition = new InputTypeDefinition($className, ['names' => new ListType(ScalarType::STRING())]);
 
         $this->generateAndEvaluate($definition);
 
@@ -58,7 +58,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
         $className  = $this->randomClassName();
         $definition = new InputTypeDefinition(
             $className,
-            ['firstName' => Scalar::STRING(), 'lastName' => Scalar::STRING()]
+            ['firstName' => ScalarType::STRING(), 'lastName' => ScalarType::STRING()]
         );
 
         $this->generateAndEvaluate($definition);
@@ -85,63 +85,63 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     public function types(): Generator
     {
         yield 'Non-nullable String' => [
-            new NonNullable(Scalar::STRING()),
-            'string'
+            new NonNullable(ScalarType::STRING()),
+            'string',
         ];
 
         yield 'Non-nullable Boolean' => [
-            new NonNullable(Scalar::BOOLEAN()),
-            'bool'
+            new NonNullable(ScalarType::BOOLEAN()),
+            'bool',
         ];
 
         yield 'Non-nullable Integer' => [
-            new NonNullable(Scalar::INTEGER()),
-            'int'
+            new NonNullable(ScalarType::INTEGER()),
+            'int',
         ];
 
         yield 'Non-nullable Float' => [
-            new NonNullable(Scalar::FLOAT()),
-            'float'
+            new NonNullable(ScalarType::FLOAT()),
+            'float',
         ];
 
         yield 'Non-nullable List' => [
-            new NonNullable(new ListType(Scalar::STRING())),
-            'array'
+            new NonNullable(new ListType(ScalarType::STRING())),
+            'array',
         ];
 
         yield 'Non-nullable Generated class' => [
             new NonNullable(new GeneratedClassType(DummyGeneratedClass::class)),
-            DummyGeneratedClass::class
+            DummyGeneratedClass::class,
         ];
 
         yield 'Nullable String' => [
-            Scalar::STRING(),
-            '?string'
+            ScalarType::STRING(),
+            '?string',
         ];
 
         yield 'Nullable Boolean' => [
-            Scalar::BOOLEAN(),
-            '?bool'
+            ScalarType::BOOLEAN(),
+            '?bool',
         ];
 
         yield 'Nullable Integer' => [
-            Scalar::INTEGER(),
-            '?int'
+            ScalarType::INTEGER(),
+            '?int',
         ];
 
         yield 'Nullable Float' => [
-            Scalar::FLOAT(),
-            '?float'
+            ScalarType::FLOAT(),
+            '?float',
         ];
 
         yield 'Nullable List' => [
-            new ListType(Scalar::STRING()),
-            '?array'
+            new ListType(ScalarType::STRING()),
+            '?array',
         ];
 
         yield 'Nullable Generated class' => [
             new GeneratedClassType(DummyGeneratedClass::class),
-            '?' . DummyGeneratedClass::class
+            '?' . DummyGeneratedClass::class,
         ];
     }
 
@@ -153,7 +153,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
         $className  = $this->randomClassName();
         $definition = new InputTypeDefinition(
             $className,
-            ['firstName' => Scalar::STRING(), 'lastName' => Scalar::STRING()]
+            ['firstName' => ScalarType::STRING(), 'lastName' => ScalarType::STRING()]
         );
 
         $this->generateAndEvaluate($definition);
@@ -170,7 +170,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
         $className  = $this->randomClassName();
         $definition = new InputTypeDefinition(
             $className,
-            ['firstName' => Scalar::STRING(), 'lastName' => Scalar::STRING()]
+            ['firstName' => ScalarType::STRING(), 'lastName' => ScalarType::STRING()]
         );
         $this->generateAndEvaluate($definition);
 
@@ -189,7 +189,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
         $className  = $this->randomClassName();
         $definition = new InputTypeDefinition(
             $className,
-            ['firstName' => Scalar::STRING(), 'lastName' => Scalar::STRING()]
+            ['firstName' => ScalarType::STRING(), 'lastName' => ScalarType::STRING()]
         );
         $this->generateAndEvaluate($definition);
 
@@ -208,7 +208,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
         $className  = $this->randomClassName();
         $definition = new InputTypeDefinition(
             $className,
-            ['firstName' => new NonNullable(Scalar::STRING()), 'lastName' => Scalar::STRING()]
+            ['firstName' => new NonNullable(ScalarType::STRING()), 'lastName' => ScalarType::STRING()]
         );
         $this->generateAndEvaluate($definition);
 
@@ -225,7 +225,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     public function from_array_list(): void
     {
         $className  = $this->randomClassName();
-        $definition = new InputTypeDefinition($className, ['names' => new ListType(Scalar::STRING())]);
+        $definition = new InputTypeDefinition($className, ['names' => new ListType(ScalarType::STRING())]);
         $this->generateAndEvaluate($definition);
 
         $result = $className::fromArray(['names' => ['Alice', 'Bob', 'Carla']]);
@@ -239,7 +239,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     public function nullable_list_without_data(): void
     {
         $className  = $this->randomClassName();
-        $definition = new InputTypeDefinition($className, ['names' => new ListType(Scalar::STRING())]);
+        $definition = new InputTypeDefinition($className, ['names' => new ListType(ScalarType::STRING())]);
         $this->generateAndEvaluate($definition);
 
         $result = $className::fromArray([]);
@@ -253,7 +253,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     public function nullable_list_with_data(): void
     {
         $className  = $this->randomClassName();
-        $definition = new InputTypeDefinition($className, ['names' => new ListType(Scalar::STRING())]);
+        $definition = new InputTypeDefinition($className, ['names' => new ListType(ScalarType::STRING())]);
         $this->generateAndEvaluate($definition);
 
         $result = $className::fromArray(['names' => ['Alice', 'Bob', 'Carla']]);
@@ -267,7 +267,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     public function list_with_nullable_elements(): void
     {
         $className  = $this->randomClassName();
-        $definition = new InputTypeDefinition($className, ['names' => new ListType(Scalar::STRING())]);
+        $definition = new InputTypeDefinition($className, ['names' => new ListType(ScalarType::STRING())]);
         $this->generateAndEvaluate($definition);
 
         $result = $className::fromArray(['names' => ['Alice', null, 'Carla']]);
@@ -390,40 +390,40 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     public function invalidInput(): Generator
     {
         $definition = [
-            's' => new NonNullable(Scalar::STRING()),
-            'i' => new NonNullable(Scalar::INTEGER()),
-            'f' => new NonNullable(Scalar::FLOAT()),
-            'b' => new NonNullable(Scalar::BOOLEAN())
+            's' => new NonNullable(ScalarType::STRING()),
+            'i' => new NonNullable(ScalarType::INTEGER()),
+            'f' => new NonNullable(ScalarType::FLOAT()),
+            'b' => new NonNullable(ScalarType::BOOLEAN()),
         ];
 
         yield 'Required field is missing' => [
             $definition,
             ['s' => 'Jane'],
-            'i must not be null'
+            'i must not be null',
         ];
 
         yield 'Invalid type' => [
             $definition,
             ['s' => 1, 'i' => 1, 'f' => 1.5, 'b' => true],
-            's must be a string, got integer'
+            's must be a string, got integer',
         ];
 
         yield 'generated class' => [
             ['names' => new GeneratedClassType(DummyGeneratedClass::class)],
             ['names' => 'foo'],
-            'names must be a array, got string'
+            'names must be a array, got string',
         ];
 
         yield 'List with non-nullable scalar type' => [
-            ['names' => new ListType(new NonNullable(Scalar::STRING()))],
+            ['names' => new ListType(new NonNullable(ScalarType::STRING()))],
             ['names' => ['Alice', null, 'Carla']],
-            'names[1] must not be null'
+            'names[1] must not be null',
         ];
 
         yield 'List with non-nullable generated class' => [
             ['names' => new ListType(new NonNullable(new GeneratedClassType(DummyGeneratedClass::class)))],
             ['names' => [['Alice'], 'Carla']],
-            'names[1] must be a array, got string'
+            'names[1] must be a array, got string',
         ];
     }
 }

@@ -5,15 +5,9 @@ namespace GraphQLGenerator\Type;
 
 final class NonNullable implements Type
 {
-    /**
-     * @var Scalar|GeneratedClassType|ListType
-     */
-    public object $elementType;
+    public ScalarType|GeneratedClassType|ExistingClassType|ListType $elementType;
 
-    /**
-     * @param Scalar|GeneratedClassType|ListType $elementType
-     */
-    public function __construct(object $elementType)
+    public function __construct(ScalarType|GeneratedClassType|ExistingClassType|ListType $elementType)
     {
         $this->elementType = $elementType;
     }

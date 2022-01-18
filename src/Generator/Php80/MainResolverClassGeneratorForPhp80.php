@@ -18,7 +18,7 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
 
         $ctor = $class->addMethod('__construct');
         foreach ($definition->resolvers as $resolver) {
-            $name = lcfirst($resolver->typeName).ucfirst($resolver->fieldName);
+            $name = lcfirst($resolver->typeName) . ucfirst($resolver->fieldName);
 
             $class->addProperty($name)->setType($resolver->className);
             $ctor->addParameter($name)->setType($resolver->className);
@@ -39,7 +39,7 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
         $resolve->addBody('return match ($type . \'.\' . $field) {');
 
         foreach ($definition->resolvers as $resolver) {
-            $name = lcfirst($resolver->typeName).ucfirst($resolver->fieldName);
+            $name = lcfirst($resolver->typeName) . ucfirst($resolver->fieldName);
 
             $args = [];
             if ($resolver->valueType !== null) {

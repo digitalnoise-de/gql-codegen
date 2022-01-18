@@ -9,7 +9,7 @@ use GraphQLGenerator\Generator\InputTypeClassGenerator;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
-use GraphQLGenerator\Type\Scalar;
+use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use LogicException;
 use Nette\PhpGenerator\Method;
@@ -153,7 +153,7 @@ final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
             sprintf(
                 '    throw new \RuntimeException(\'%s must be a %s, got \' . gettype($value));',
                 $fieldName,
-                $type instanceof Scalar ? $type->getValue() : 'array',
+                $type instanceof ScalarType ? $type->getValue() : 'array',
             )
         );
         $method->addBody('}');
@@ -190,20 +190,20 @@ final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
             return sprintf('!is_array(%s)', $variable);
         }
 
-        if ($type instanceof Scalar) {
-            if ($type->equals(Scalar::STRING())) {
+        if ($type instanceof ScalarType) {
+            if ($type->equals(ScalarType::STRING())) {
                 return sprintf('!is_string(%s)', $variable);
             }
 
-            if ($type->equals(Scalar::BOOLEAN())) {
+            if ($type->equals(ScalarType::BOOLEAN())) {
                 return sprintf('!is_bool(%s)', $variable);
             }
 
-            if ($type->equals(Scalar::INTEGER())) {
+            if ($type->equals(ScalarType::INTEGER())) {
                 return sprintf('!is_int(%s)', $variable);
             }
 
-            if ($type->equals(Scalar::FLOAT())) {
+            if ($type->equals(ScalarType::FLOAT())) {
                 return sprintf('!is_float(%s)', $variable);
             }
         }

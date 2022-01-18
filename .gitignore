@@ -1,4 +1,6 @@
 .phpunit.cache/
+.php-cs-fixer.cache
 composer.lock
+reports/
 tools/
 vendor/

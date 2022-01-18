@@ -12,7 +12,7 @@ use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
-use GraphQLGenerator\Type\Scalar;
+use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use PHPUnit\Framework\TestCase;
 
@@ -38,7 +38,7 @@ end;
 
         self::assertEquals(
             new ResolverDefinition(
-                'T\\Resolver\\Query\\FieldResolver', 'Query', 'field', null, null, Scalar::BOOLEAN()
+                'T\\Resolver\\Query\\FieldResolver', 'Query', 'field', null, null, ScalarType::BOOLEAN()
             ),
             $definition->resolvers[0]
         );
@@ -70,11 +70,11 @@ end;
 
     public function inputTypeExamples(): iterable
     {
-        yield ['String', Scalar::STRING()];
-        yield ['String!', new NonNullable(Scalar::STRING())];
-        yield ['[String]', new ListType(Scalar::STRING())];
-        yield ['[String!]', new ListType(new NonNullable(Scalar::STRING()))];
-        yield ['[String!]!', new NonNullable(new ListType(new NonNullable(Scalar::STRING())))];
+        yield ['String', ScalarType::STRING()];
+        yield ['String!', new NonNullable(ScalarType::STRING())];
+        yield ['[String]', new ListType(ScalarType::STRING())];
+        yield ['[String!]', new ListType(new NonNullable(ScalarType::STRING()))];
+        yield ['[String!]!', new NonNullable(new ListType(new NonNullable(ScalarType::STRING())))];
 
         yield ['OtherInput', new GeneratedClassType('T\Type\OtherInput')];
         yield ['OtherInput!', new NonNullable(new GeneratedClassType('T\Type\OtherInput'))];
@@ -104,7 +104,7 @@ end;
                 'field',
                 new ExistingClassType('My\\ObjectType'),
                 null,
-                Scalar::BOOLEAN()
+                ScalarType::BOOLEAN()
             ),
             $definition->resolvers[0]
         );
@@ -133,8 +133,8 @@ end;
 
         self::assertEquals(
             [
-                new InputTypeDefinition('T\\Type\\InputA', ['field1' => Scalar::STRING()]),
-                new InputTypeDefinition('T\\Type\\InputB', ['field1' => Scalar::STRING()])
+                new InputTypeDefinition('T\\Type\\InputA', ['field1' => ScalarType::STRING()]),
+                new InputTypeDefinition('T\\Type\\InputB', ['field1' => ScalarType::STRING()]),
             ],
             $definition->inputTypes
         );

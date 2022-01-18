@@ -27,9 +27,7 @@ final class Psr4ClassDumper implements ClassDumper
 
         $relativeClass = substr($class->name, $len);
         if ($relativeClass === '') {
-            throw new Exception(
-                sprintf('Class "%s" can not be created in namespace "%s"', $class->name, $this->prefix)
-            );
+            throw new Exception(sprintf('Class "%s" can not be created in namespace "%s"', $class->name, $this->prefix));
         }
 
         $file = sprintf('%s%s.php', $this->directory, str_replace('\\', '/', $relativeClass));

@@ -8,7 +8,7 @@ use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
-use GraphQLGenerator\Type\Scalar;
+use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use LogicException;
 
@@ -41,20 +41,20 @@ final class TypeDetailsFactoryForPhp80
             return new TypeDetails('\\' . $type->className, $nullable, null);
         }
 
-        if ($type instanceof Scalar) {
-            if ($type->equals(Scalar::STRING())) {
+        if ($type instanceof ScalarType) {
+            if ($type->equals(ScalarType::STRING())) {
                 return new TypeDetails('string', $nullable, null);
             }
 
-            if ($type->equals(Scalar::BOOLEAN())) {
+            if ($type->equals(ScalarType::BOOLEAN())) {
                 return new TypeDetails('bool', $nullable, null);
             }
 
-            if ($type->equals(Scalar::INTEGER())) {
+            if ($type->equals(ScalarType::INTEGER())) {
                 return new TypeDetails('int', $nullable, null);
             }
 
-            if ($type->equals(Scalar::FLOAT())) {
+            if ($type->equals(ScalarType::FLOAT())) {
                 return new TypeDetails('float', $nullable, null);
             }
         }

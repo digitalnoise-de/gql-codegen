@@ -39,17 +39,17 @@ final class Psr4ClassDumperTest extends TestCase
     {
         yield 'No namespace' => [
             'Foo',
-            'Class "Foo" does not belong to namespace "Acme\\GraphQL"'
+            'Class "Foo" does not belong to namespace "Acme\\GraphQL"',
         ];
 
         yield 'Case mismatch' => [
             'Acme\\Graphql',
-            'Class "Acme\\Graphql" does not belong to namespace "Acme\\GraphQL"'
+            'Class "Acme\\Graphql" does not belong to namespace "Acme\\GraphQL"',
         ];
 
         yield 'No class name' => [
             'Acme\\GraphQL',
-            'Class "Acme\\GraphQL" can not be created in namespace "Acme\\GraphQL"'
+            'Class "Acme\\GraphQL" can not be created in namespace "Acme\\GraphQL"',
         ];
     }
 

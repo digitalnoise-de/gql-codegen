@@ -7,7 +7,7 @@ use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
-use GraphQLGenerator\Type\Scalar;
+use GraphQLGenerator\Type\ScalarType;
 
 abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
 {
@@ -41,8 +41,8 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
             $type,
             $field,
             null,
-            new InputTypeDefinition(DummyGeneratedClass::class, ['output' => Scalar::STRING()]),
-            Scalar::STRING()
+            new InputTypeDefinition(DummyGeneratedClass::class, ['output' => ScalarType::STRING()]),
+            ScalarType::STRING()
         );
     }
 
