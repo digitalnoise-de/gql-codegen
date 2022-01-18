@@ -4,6 +4,7 @@
     "description": "A tool for generating strictly typed GraphQL resolvers in PHP",
     "license": "MIT",
     "require": {
+        "php": "^8.0",
         "ext-dom": "*",
         "ext-simplexml": "*",
         "ext-libxml": "*",
@@ -17,7 +18,8 @@
         "roave/security-advisories": "dev-latest",
         "phpunit/phpunit": "^9.5",
         "mikey179/vfsstream": "^1.6",
-        "vimeo/psalm": "^4.8"
+        "vimeo/psalm": "^4.8",
+        "roave/infection-static-analysis-plugin": "^1.15"
     },
     "authors": [
         {

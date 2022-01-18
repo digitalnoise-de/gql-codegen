@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator\Generator\Php74;
+namespace GraphQLGenerator\Generator\Php80;
 
 use GraphQLGenerator\Generator\TypeDetails;
 use GraphQLGenerator\Type\ExistingClassType;
@@ -12,7 +12,7 @@ use GraphQLGenerator\Type\Scalar;
 use GraphQLGenerator\Type\Type;
 use LogicException;
 
-final class TypeDetailsFactoryForPhp74
+final class TypeDetailsFactoryForPhp80
 {
     public static function create(Type $type): TypeDetails
     {

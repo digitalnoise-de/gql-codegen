@@ -78,4 +78,28 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
         self::assertSame('A: Hello', $mainResolver->resolve('A', 'foo', null, ['output' => 'Hello']));
         self::assertSame('B: Hello', $mainResolver->resolve('B', 'foo', null, ['output' => 'Hello']));
     }
+
+    /**
+     * @test
+     */
+    public function canResolve_should_return_whether_a_field_is_resolvable(): void
+    {
+        $className  = $this->randomClassName();
+        $definition = new MainResolverDefinition(
+            $className,
+            [
+                $this->dummyResolverDefinition('A', 'foo'),
+                $this->dummyResolverDefinition('B', 'foo'),
+            ]
+        );
+
+        $this->generateAndEvaluate($definition);
+
+        $mainResolver = new $className(new DummyResolver('A: '), new DummyResolver('B: '));
+
+        self::assertTrue($mainResolver->canResolve('A', 'foo'), 'A.foo should be resolvable');
+        self::assertFalse($mainResolver->canResolve('A', 'bar'), 'A.bar should not be resolvable');
+        self::assertTrue($mainResolver->canResolve('B', 'foo'), 'B.foo should be resolvable');
+        self::assertFalse($mainResolver->canResolve('C', 'foo'), 'C.foo should not be resolvable');
+    }
 }

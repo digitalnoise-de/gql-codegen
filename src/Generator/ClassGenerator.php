@@ -6,9 +6,9 @@ namespace GraphQLGenerator\Generator;
 use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Build\ResolverDefinition;
-use GraphQLGenerator\Generator\Php74\InputTypeClassGeneratorForPhp74;
-use GraphQLGenerator\Generator\Php74\MainResolverClassGeneratorForPhp74;
-use GraphQLGenerator\Generator\Php74\ResolverInterfaceGeneratorForPhp74;
+use GraphQLGenerator\Generator\Php80\InputTypeClassGeneratorForPhp80;
+use GraphQLGenerator\Generator\Php80\MainResolverClassGeneratorForPhp80;
+use GraphQLGenerator\Generator\Php80\ResolverInterfaceGeneratorForPhp80;
 
 final class ClassGenerator
 {
@@ -19,7 +19,7 @@ final class ClassGenerator
     private MainResolverClassGenerator $mainResolverClassGenerator;
 
     public function __construct(
-        InputTypeClassGenerator    $inputTypeClassGenerator,
+        InputTypeClassGenerator $inputTypeClassGenerator,
         ResolverInterfaceGenerator $resolverClassGenerator,
         MainResolverClassGenerator $mainResolverClassGenerator
     ) {
@@ -28,12 +28,12 @@ final class ClassGenerator
         $this->mainResolverClassGenerator = $mainResolverClassGenerator;
     }
 
-    public static function forPhp74(): self
+    public static function forPhp80(): self
     {
         return new self(
-            new InputTypeClassGeneratorForPhp74(),
-            new ResolverInterfaceGeneratorForPhp74(),
-            new MainResolverClassGeneratorForPhp74()
+            new InputTypeClassGeneratorForPhp80(),
+            new ResolverInterfaceGeneratorForPhp80(),
+            new MainResolverClassGeneratorForPhp80()
         );
     }
 

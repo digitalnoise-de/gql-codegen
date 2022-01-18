@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator\Generator\Php74;
+namespace GraphQLGenerator\Generator\Php80;
 
 use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
@@ -16,7 +16,7 @@ use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\Property;
 
-final class InputTypeClassGeneratorForPhp74 implements InputTypeClassGenerator
+final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
 {
     public function generate(InputTypeDefinition $definition): GeneratedClass
     {
@@ -52,7 +52,7 @@ final class InputTypeClassGeneratorForPhp74 implements InputTypeClassGenerator
         $method->setVisibility('public');
 
         foreach ($fields as $name => $type) {
-            $typeDetails = TypeDetailsFactoryForPhp74::create($type);
+            $typeDetails = TypeDetailsFactoryForPhp80::create($type);
 
             $param = $method->addParameter($name);
             $param->setType($typeDetails->phpType);
@@ -97,7 +97,7 @@ final class InputTypeClassGeneratorForPhp74 implements InputTypeClassGenerator
 
     private function property(string $name, Type $type): Property
     {
-        $typeDetails = TypeDetailsFactoryForPhp74::create($type);
+        $typeDetails = TypeDetailsFactoryForPhp80::create($type);
 
         $property = new Property($name);
         $property->setPublic();
@@ -113,13 +113,12 @@ final class InputTypeClassGeneratorForPhp74 implements InputTypeClassGenerator
 
     private function sanitizeMethod(string $name, Type $type): Method
     {
-        $typeDetails = TypeDetailsFactoryForPhp74::create($type);
+        $typeDetails = TypeDetailsFactoryForPhp80::create($type);
 
         $method = new Method($this->sanitizeMethodName($name));
         $method->setStatic(true);
         $method->setPrivate();
-        $method->addComment('@param mixed $value');
-        $method->addParameter('value');
+        $method->addParameter('value')->setType('mixed');
         $method->setReturnType($typeDetails->phpType);
         $method->setReturnNullable($typeDetails->nullable);
 
@@ -219,15 +218,13 @@ final class InputTypeClassGeneratorForPhp74 implements InputTypeClassGenerator
 
     private function sanitizeListElementMethod(string $name, Type $type): Method
     {
-        $typeDetails = TypeDetailsFactoryForPhp74::create($type);
+        $typeDetails = TypeDetailsFactoryForPhp80::create($type);
 
         $method = new Method($this->sanitizeListElementMethodName($name));
         $method->setStatic(true);
         $method->setPrivate();
-        $method->addComment('@param mixed $value');
-        $method->addComment('@param string|int $index');
-        $method->addParameter('value');
-        $method->addParameter('index');
+        $method->addParameter('value')->setType('mixed');
+        $method->addParameter('index')->setType('string|int');
         $method->setReturnType($typeDetails->phpType);
         $method->setReturnNullable($typeDetails->nullable);
 

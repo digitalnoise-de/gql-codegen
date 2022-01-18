@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator\Generator\Php74;
+namespace GraphQLGenerator\Generator\Php80;
 
 use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
 use Nette\PhpGenerator\PhpFile;
 
-final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGenerator
+final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGenerator
 {
     public function generate(MainResolverDefinition $definition): GeneratedClass
     {
@@ -26,18 +26,17 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
         }
 
         $resolve = $class->addMethod('resolve');
-        $resolve->addComment('@param mixed $value');
-        $resolve->addComment('@return mixed');
+        $resolve->setReturnType('mixed');
         $resolve->addParameter('type')
             ->setType('string');
         $resolve->addParameter('field')
             ->setType('string');
-        $resolve->addParameter('value');
+        $resolve->addParameter('value')
+            ->setType('mixed');
         $resolve->addParameter('args')
             ->setType('array');
 
-        $resolve->addBody('$name = $type . \'.\' . $field;');
-        $resolve->addBody('switch ($name) {');
+        $resolve->addBody('return match ($type . \'.\' . $field) {');
 
         foreach ($definition->resolvers as $resolver) {
             $name = lcfirst($resolver->typeName).ucfirst($resolver->fieldName);
@@ -51,11 +50,18 @@ final class MainResolverClassGeneratorForPhp74 implements MainResolverClassGener
                 $args[] = sprintf('\%s::fromArray($args)', $resolver->args->className);
             }
 
-            $resolve->addBody(sprintf('    case \'%s.%s\':', $resolver->typeName, $resolver->fieldName));
-            $resolve->addBody(sprintf('        return ($this->%s)(%s);', $name, implode(', ', $args)));
+            $resolve->addBody(
+                sprintf(
+                    '    \'%s.%s\' => ($this->%s)(%s),',
+                    $resolver->typeName,
+                    $resolver->fieldName,
+                    $name,
+                    implode(', ', $args)
+                )
+            );
         }
 
-        $resolve->addBody('}');
+        $resolve->addBody('};');
 
         $canResolve = $class->addMethod('canResolve');
         $canResolve->setReturnType('bool');
