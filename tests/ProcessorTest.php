@@ -46,6 +46,35 @@ end;
 
     /**
      * @test
+     */
+    public function resolver_with_arguments(): void
+    {
+        $schema = <<<end
+type Query {
+    field(name: String, age: Int): Boolean
+}
+end;
+
+        $definition = $this->subject->process($schema, [], [new Resolver('Query', 'field')]);
+
+        self::assertEquals(
+            new ResolverDefinition(
+                'T\\Resolver\\Query\\FieldResolver',
+                'Query',
+                'field',
+                null,
+                new InputTypeDefinition(
+                    'T\Resolver\Query\FieldArguments',
+                    ['name' => ScalarType::STRING(), 'age' => ScalarType::INTEGER()]
+                ),
+                ScalarType::BOOLEAN()
+            ),
+            $definition->resolvers[0]
+        );
+    }
+
+    /**
+     * @test
      *
      * @dataProvider inputTypeExamples
      *
@@ -102,7 +131,7 @@ end;
                 'T\\Resolver\\ObjectType\\FieldResolver',
                 'ObjectType',
                 'field',
-                new ExistingClassType('My\\ObjectType'),
+                new NonNullable(new ExistingClassType('My\\ObjectType')),
                 null,
                 ScalarType::BOOLEAN()
             ),

@@ -159,7 +159,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
         $this->generateAndEvaluate($definition);
 
         self::assertClassHasPublicMethod('__construct', $className);
-        self::assertMethodHasParameters('__construct', ['firstName', 'lastName'], $className);
+        self::assertMethodHasParameters('__construct', ['firstName' => '?string', 'lastName' => '?string'], $className);
     }
 
     /**

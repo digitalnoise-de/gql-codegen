@@ -188,7 +188,7 @@ final class Processor
         if ($schema->getQueryType() === $type || $schema->getMutationType() === $type) {
             $value = null;
         } else {
-            $value = $this->typeFor($type);
+            $value = new NonNullable($this->typeFor($type));
         }
 
         $argumentClass = null;
