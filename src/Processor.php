@@ -51,7 +51,7 @@ final class Processor
 
     /**
      * @param array<string, string> $types
-     * @param list<Resolver>        $resolvers
+     * @param list<Resolver> $resolvers
      */
     public function process(string $schemaContent, array $types, array $resolvers): BuildDefinition
     {
@@ -163,15 +163,17 @@ final class Processor
         foreach ($resolvers as $resolver) {
             $type = $schema->getType($resolver->type);
             if ($type === null) {
-                throw new RuntimeException('Type does not exist: ' . $resolver->type);
+                throw new RuntimeException('Type does not exist: '.$resolver->type);
             }
 
             if (!$type instanceof ObjectType) {
-                throw new RuntimeException('Invalid type: ' . get_class($type));
+                throw new RuntimeException('Invalid type: '.get_class($type));
             }
 
             if (!$type->hasField($resolver->field)) {
-                throw new RuntimeException('Field missing: ' . $resolver->field);
+                throw new RuntimeException(
+                    sprintf('Field "%s" does not exist on type "%s"', $resolver->field, $type->name)
+                );
             }
 
             $result[] = $this->resolverDefinition($schema, $type, $type->getField($resolver->field));
