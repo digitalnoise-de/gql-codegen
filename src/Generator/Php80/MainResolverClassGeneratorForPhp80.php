@@ -57,7 +57,17 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
 
             $resolveMethodName = sprintf('resolve%s', ucfirst($name));
 
+            $returnType = TypeDetailsFactoryForPhp80::create($resolver->returnType);
+
             $method = $class->addMethod($resolveMethodName);
+
+            $method->setReturnType($returnType->phpType);
+            $method->setReturnNullable($returnType->nullable);
+
+            if ($returnType->docBlockType !== null) {
+                $method->addComment(sprintf('@return %s', $returnType->docBlockType));
+            }
+
             $method->addParameter('value')
                 ->setType('mixed');
 
