@@ -116,7 +116,7 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
         }
 
         if ($type instanceof ExistingClassType) {
-            return sprintf('!%s instanceof %s', $variable, $type->className);
+            return sprintf('!%s instanceof \\%s', $variable, $type->className);
         }
 
         if ($type->equals(ScalarType::STRING())) {
@@ -143,7 +143,7 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
         if ($type instanceof NonNullable) {
             return $this->typeName($type->elementType);
         }
-        
+
         if ($type instanceof ExistingClassType) {
             return $type->className;
         }
