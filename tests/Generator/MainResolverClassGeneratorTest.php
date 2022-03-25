@@ -7,7 +7,9 @@ use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
+use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\ScalarType;
+use GraphQLGenerator\Type\Type;
 
 abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
 {
@@ -77,6 +79,57 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
 
         self::assertSame('A: Hello', $mainResolver->resolve('A', 'foo', null, ['output' => 'Hello']));
         self::assertSame('B: Hello', $mainResolver->resolve('B', 'foo', null, ['output' => 'Hello']));
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider valueCheckProvider
+     */
+    public function field_can_not_be_resolved_with_invalid_input_value(
+        Type   $valueType,
+        mixed  $input,
+        string $expectedType
+    ): void {
+        $className          = $this->randomClassName();
+        $resolverDefinition = new ResolverDefinition(
+            DummyResolver::class,
+            'A',
+            'foo',
+            $valueType,
+            null,
+            ScalarType::STRING()
+        );
+        $definition         = new MainResolverDefinition($className, [$resolverDefinition]);
+        $this->generateAndEvaluate($definition);
+        $mainResolver = new $className(new DummyResolver());
+
+        $this->expectExceptionMessage(
+            sprintf('A.foo expectes value of type "%s", got "%s"', $expectedType, gettype($input))
+        );
+
+        $mainResolver->resolve('A', 'foo', $input, []);
+    }
+
+    public function valueCheckProvider(): iterable
+    {
+        yield 'Class type with scalar value' => [
+            new ExistingClassType(DummyValue::class),
+            'bar',
+            DummyValue::class
+        ];
+
+        yield 'String with int value' => [
+            ScalarType::STRING(),
+            1,
+            'string'
+        ];
+
+        yield 'Int with float value' => [
+            ScalarType::INTEGER(),
+            1.23,
+            'int'
+        ];
     }
 
     /**

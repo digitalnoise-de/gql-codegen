@@ -6,6 +6,10 @@ namespace GraphQLGenerator\Generator\Php80;
 use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
+use GraphQLGenerator\Type\ExistingClassType;
+use GraphQLGenerator\Type\ScalarType;
+use GraphQLGenerator\Type\Type;
+use LogicException;
 use Nette\PhpGenerator\PhpFile;
 
 final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGenerator
@@ -50,13 +54,37 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
                 $args[] = sprintf('\%s::fromArray($args)', $resolver->args->className);
             }
 
+            $resolveMethodName = sprintf('resolve%s', ucfirst($name));
+
+            $method = $class->addMethod($resolveMethodName);
+            $method->addParameter('value')
+                ->setType('mixed');
+
+            $method->addParameter('args')
+                ->setType('array');
+
+
+            if ($resolver->valueType !== null) {
+                $method->addBody(sprintf('    if (%s) {', $this->typeCheckFor($resolver->valueType, '$value')));
+                $method->addBody(
+                    sprintf(
+                        '        throw new \RuntimeException(\'%s.%s expectes value of type "%s", got "\' . gettype($value) . \'"\');',
+                        $resolver->typeName,
+                        $resolver->fieldName,
+                        $this->typeName($resolver->valueType)
+                    )
+                );
+                $method->addBody('    }');
+            }
+
+            $method->addBody(sprintf('    return ($this->%s)(%s);', $name, implode(', ', $args)));
+
             $resolve->addBody(
                 sprintf(
-                    '    \'%s.%s\' => ($this->%s)(%s),',
+                    '    \'%s.%s\' => $this->%s($value, $args),',
                     $resolver->typeName,
                     $resolver->fieldName,
-                    $name,
-                    implode(', ', $args)
+                    $resolveMethodName,
                 )
             );
         }
@@ -78,5 +106,43 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
         $canResolve->addBody('return in_array($type . \'.\' . $field, ?);', [$resolverNames]);
 
         return new GeneratedClass($definition->className, (string)$file);
+    }
+
+    private function typeCheckFor(Type $type, string $variable): string
+    {
+        if ($type instanceof ExistingClassType) {
+            return sprintf('!%s instanceof %s', $variable, $type->className);
+        }
+
+        if ($type->equals(ScalarType::STRING())) {
+            return sprintf('!is_string(%s)', $variable);
+        }
+
+        if ($type->equals(ScalarType::BOOLEAN())) {
+            return sprintf('!is_bool(%s)', $variable);
+        }
+
+        if ($type->equals(ScalarType::INTEGER())) {
+            return sprintf('!is_int(%s)', $variable);
+        }
+
+        if ($type->equals(ScalarType::FLOAT())) {
+            return sprintf('!is_float(%s)', $variable);
+        }
+
+        throw new LogicException();
+    }
+
+    private function typeName(Type $type): string
+    {
+        if ($type instanceof ExistingClassType) {
+            return $type->className;
+        }
+
+        if ($type instanceof ScalarType) {
+            return $type->getValue();
+        }
+
+        throw new LogicException();
     }
 }
