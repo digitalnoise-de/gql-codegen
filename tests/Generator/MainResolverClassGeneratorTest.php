@@ -8,6 +8,7 @@ use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
 use GraphQLGenerator\Type\ExistingClassType;
+use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 
@@ -117,6 +118,12 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
             new ExistingClassType(DummyValue::class),
             'bar',
             DummyValue::class
+        ];
+
+        yield 'Non nullable String with int value' => [
+            new NonNullable(ScalarType::STRING()),
+            1,
+            'string'
         ];
 
         yield 'String with int value' => [

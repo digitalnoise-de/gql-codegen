@@ -7,6 +7,7 @@ use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Generator\MainResolverClassGenerator;
 use GraphQLGenerator\Type\ExistingClassType;
+use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use LogicException;
@@ -110,6 +111,10 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
 
     private function typeCheckFor(Type $type, string $variable): string
     {
+        if ($type instanceof NonNullable) {
+            return self::typeCheckFor($type->elementType, $variable);
+        }
+
         if ($type instanceof ExistingClassType) {
             return sprintf('!%s instanceof %s', $variable, $type->className);
         }
@@ -135,6 +140,10 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
 
     private function typeName(Type $type): string
     {
+        if ($type instanceof NonNullable) {
+            return $this->typeName($type->elementType);
+        }
+        
         if ($type instanceof ExistingClassType) {
             return $type->className;
         }
