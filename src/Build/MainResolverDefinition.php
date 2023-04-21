@@ -5,19 +5,10 @@ namespace GraphQLGenerator\Build;
 
 final class MainResolverDefinition
 {
-    public string $className;
-
-    /**
-     * @var list<ResolverDefinition>
-     */
-    public array $resolvers;
-
     /**
      * @param list<ResolverDefinition> $resolvers
      */
-    public function __construct(string $className, array $resolvers)
+    public function __construct(public readonly string $className, public readonly array $resolvers)
     {
-        $this->className = $className;
-        $this->resolvers = $resolvers;
     }
 }

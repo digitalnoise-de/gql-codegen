@@ -32,8 +32,6 @@ use RuntimeException;
 
 final class Processor
 {
-    private ClassNamer $classNamer;
-
     /**
      * @var array<string, GeneratedClassType>
      */
@@ -44,9 +42,8 @@ final class Processor
      */
     private array $types = [];
 
-    public function __construct(ClassNamer $classNamer)
+    public function __construct(private readonly ClassNamer $classNamer)
     {
-        $this->classNamer = $classNamer;
     }
 
     /**
@@ -112,7 +109,7 @@ final class Processor
             return new ListType($this->convertType($type->getWrappedType()));
         }
 
-        switch (get_class($type)) {
+        switch ($type::class) {
             case StringType::class:
             case IDType::class:
             case EnumType::class:
@@ -130,7 +127,7 @@ final class Processor
                 return $this->typeFor($type);
         }
 
-        throw new RuntimeException(sprintf('Unhandled type: %s', get_class($type)));
+        throw new RuntimeException(sprintf('Unhandled type: %s', $type::class));
     }
 
     private function inputTypeFor(\GraphQL\Type\Definition\Type $type): GeneratedClassType
@@ -167,7 +164,7 @@ final class Processor
             }
 
             if (!$type instanceof ObjectType) {
-                throw new RuntimeException('Invalid type: '.get_class($type));
+                throw new RuntimeException('Invalid type: '.$type::class);
             }
 
             if (!$type->hasField($resolver->field)) {

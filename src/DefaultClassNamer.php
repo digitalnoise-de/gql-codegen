@@ -5,11 +5,8 @@ namespace GraphQLGenerator;
 
 final class DefaultClassNamer implements ClassNamer
 {
-    private string $namespacePrefix;
-
-    public function __construct(string $namespacePrefix)
+    public function __construct(private readonly string $namespacePrefix)
     {
-        $this->namespacePrefix = $namespacePrefix;
     }
 
     public function inputType(string $typeName): string

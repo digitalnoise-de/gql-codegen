@@ -10,17 +10,11 @@ use ReflectionException;
 
 final class ClassHasPublicProperty extends Constraint
 {
-    private string $property;
-
-    public function __construct(string $property)
+    public function __construct(private readonly string $property)
     {
-        $this->property = $property;
     }
 
-    /**
-     * @param mixed $other
-     */
-    protected function matches($other): bool
+    protected function matches(mixed $other): bool
     {
         try {
             $rc = new ReflectionClass($other);
@@ -40,7 +34,7 @@ final class ClassHasPublicProperty extends Constraint
         return sprintf(
             '%sclass "%s" %s',
             is_object($other) ? 'object of ' : '',
-            is_object($other) ? get_class($other) : $other,
+            is_object($other) ? $other::class : $other,
             $this->toString()
         );
     }

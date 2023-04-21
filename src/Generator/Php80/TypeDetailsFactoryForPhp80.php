@@ -59,6 +59,6 @@ final class TypeDetailsFactoryForPhp80
             }
         }
 
-        throw new LogicException(sprintf('Unexpected type "%s"', get_class($type)));
+        throw new LogicException(sprintf('Unexpected type "%s"', $type::class));
     }
 }

@@ -7,31 +7,13 @@ use GraphQLGenerator\Type\Type;
 
 final class ResolverDefinition
 {
-    public string $className;
-
-    public string $typeName;
-
-    public string $fieldName;
-
-    public ?Type $valueType;
-
-    public ?InputTypeDefinition $args;
-
-    public Type $returnType;
-
     public function __construct(
-        string $className,
-        string $typeName,
-        string $fieldName,
-        ?Type $valueType,
-        ?InputTypeDefinition $args,
-        Type $returnType
+        public readonly string               $className,
+        public readonly string               $typeName,
+        public readonly string               $fieldName,
+        public readonly ?Type                $valueType,
+        public readonly ?InputTypeDefinition $args,
+        public readonly Type                 $returnType
     ) {
-        $this->className  = $className;
-        $this->typeName   = $typeName;
-        $this->fieldName  = $fieldName;
-        $this->valueType  = $valueType;
-        $this->args       = $args;
-        $this->returnType = $returnType;
     }
 }

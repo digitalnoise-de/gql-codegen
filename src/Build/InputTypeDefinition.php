@@ -7,19 +7,10 @@ use GraphQLGenerator\Type\Type;
 
 final class InputTypeDefinition
 {
-    public string $className;
-
-    /**
-     * @var array<string, Type>
-     */
-    public array $fields;
-
     /**
      * @param array<string, Type> $fields
      */
-    public function __construct(string $className, array $fields)
+    public function __construct(public readonly string $className, public readonly array $fields)
     {
-        $this->className = $className;
-        $this->fields    = $fields;
     }
 }

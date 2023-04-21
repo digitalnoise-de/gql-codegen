@@ -5,11 +5,8 @@ namespace Tests\GraphQLGenerator\Generator;
 
 final class DummyResolver
 {
-    private string $prefix;
-
-    public function __construct(string $prefix = '')
+    public function __construct(private readonly string $prefix = '')
     {
-        $this->prefix = $prefix;
     }
 
     public function __invoke(DummyGeneratedClass $input)

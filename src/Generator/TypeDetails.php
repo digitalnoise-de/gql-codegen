@@ -8,16 +8,10 @@ namespace GraphQLGenerator\Generator;
  */
 final class TypeDetails
 {
-    public string $phpType;
-
-    public bool $nullable;
-
-    public ?string $docBlockType;
-
-    public function __construct(string $phpType, bool $nullable, ?string $docBlockType)
-    {
-        $this->phpType      = $phpType;
-        $this->nullable     = $nullable;
-        $this->docBlockType = $docBlockType;
+    public function __construct(
+        public readonly string  $phpType,
+        public readonly bool    $nullable,
+        public readonly ?string $docBlockType
+    ) {
     }
 }

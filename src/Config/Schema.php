@@ -6,16 +6,10 @@ namespace GraphQLGenerator\Config;
 final class Schema
 {
     /**
-     * @var list<string>
-     */
-    private array $files;
-
-    /**
      * @param list<string> $files
      */
-    public function __construct(array $files)
+    public function __construct(private readonly array $files)
     {
-        $this->files = $files;
     }
 
     public function content(): string

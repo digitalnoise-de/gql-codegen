@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Type;
 
-final class ListType implements Type
+final class ListType implements Type, \Stringable
 {
-    public NonNullable|ScalarType|GeneratedClassType|ExistingClassType $elementType;
-
-    public function __construct(NonNullable|ScalarType|GeneratedClassType|ExistingClassType $elementType)
-    {
-        $this->elementType = $elementType;
+    public function __construct(
+        public readonly NonNullable|ScalarType|GeneratedClassType|ExistingClassType $elementType
+    ) {
     }
 
     public function __toString(): string

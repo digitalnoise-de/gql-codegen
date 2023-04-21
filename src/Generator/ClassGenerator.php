@@ -12,20 +12,11 @@ use GraphQLGenerator\Generator\Php80\ResolverInterfaceGeneratorForPhp80;
 
 final class ClassGenerator
 {
-    private InputTypeClassGenerator $inputTypeClassGenerator;
-
-    private ResolverInterfaceGenerator $resolverClassGenerator;
-
-    private MainResolverClassGenerator $mainResolverClassGenerator;
-
     public function __construct(
-        InputTypeClassGenerator $inputTypeClassGenerator,
-        ResolverInterfaceGenerator $resolverClassGenerator,
-        MainResolverClassGenerator $mainResolverClassGenerator
+        private readonly InputTypeClassGenerator    $inputTypeClassGenerator,
+        private readonly ResolverInterfaceGenerator $resolverClassGenerator,
+        private readonly MainResolverClassGenerator $mainResolverClassGenerator
     ) {
-        $this->inputTypeClassGenerator    = $inputTypeClassGenerator;
-        $this->resolverClassGenerator     = $resolverClassGenerator;
-        $this->mainResolverClassGenerator = $mainResolverClassGenerator;
     }
 
     public static function forPhp80(): self

@@ -8,14 +8,8 @@ use GraphQLGenerator\Generator\GeneratedClass;
 
 final class Psr4ClassDumper implements ClassDumper
 {
-    private string $prefix;
-
-    private string $directory;
-
-    public function __construct(string $prefix, string $directory)
+    public function __construct(private readonly string $prefix, private readonly string $directory)
     {
-        $this->prefix    = $prefix;
-        $this->directory = $directory;
     }
 
     public function dump(GeneratedClass $class): void

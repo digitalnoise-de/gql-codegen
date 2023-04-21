@@ -8,13 +8,7 @@ namespace GraphQLGenerator\Config;
  */
 final class Target
 {
-    public string $namespacePrefix;
-
-    public string $directory;
-
-    public function __construct(string $namespacePrefix, string $directory)
+    public function __construct(public readonly string $namespacePrefix, public readonly string $directory)
     {
-        $this->namespacePrefix = $namespacePrefix;
-        $this->directory       = $directory;
     }
 }

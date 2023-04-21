@@ -208,7 +208,7 @@ final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
             }
         }
 
-        throw new LogicException(sprintf('Unsupported type of class %s', get_class($type)));
+        throw new LogicException(sprintf('Unsupported type of class %s', $type::class));
     }
 
     private function sanitizeListElementMethodName(string $name): string

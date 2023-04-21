@@ -6,13 +6,10 @@ namespace GraphQLGenerator\Type;
 /**
  * @psalm-immutable
  */
-final class GeneratedClassType implements Type
+final class GeneratedClassType implements Type, \Stringable
 {
-    public string $className;
-
-    public function __construct(string $className)
+    public function __construct(public readonly string $className)
     {
-        $this->className = $className;
     }
 
     public function __toString(): string

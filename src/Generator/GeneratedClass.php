@@ -5,13 +5,7 @@ namespace GraphQLGenerator\Generator;
 
 final class GeneratedClass
 {
-    public string $name;
-
-    public string $content;
-
-    public function __construct(string $name, string $content)
+    public function __construct(public readonly string $name, public readonly string $content)
     {
-        $this->name    = $name;
-        $this->content = $content;
     }
 }

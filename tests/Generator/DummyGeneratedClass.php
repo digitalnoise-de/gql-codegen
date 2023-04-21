@@ -5,11 +5,8 @@ namespace Tests\GraphQLGenerator\Generator;
 
 final class DummyGeneratedClass
 {
-    public array $data;
-
-    public function __construct(array $data)
+    public function __construct(public readonly array $data)
     {
-        $this->data = $data;
     }
 
     public static function fromArray(array $data): self

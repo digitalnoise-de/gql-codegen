@@ -11,30 +11,16 @@ use SimpleXMLElement;
  */
 final class Config
 {
-    public Target $target;
-
-    public Schema $schema;
-
-    /**
-     * @var array<string, string>
-     */
-    public array $types;
-
-    /**
-     * @var list<Resolver>
-     */
-    public array $resolvers;
-
     /**
      * @param array<string, string> $types
      * @param list<Resolver>        $resolvers
      */
-    public function __construct(Target $target, Schema $schema, array $types, array $resolvers)
-    {
-        $this->target    = $target;
-        $this->schema    = $schema;
-        $this->resolvers = $resolvers;
-        $this->types     = $types;
+    public function __construct(
+        public readonly Target $target,
+        public readonly Schema $schema,
+        public readonly array  $types,
+        public readonly array  $resolvers
+    ) {
     }
 
     /**
