@@ -49,6 +49,10 @@ final class Config
 
         $config = simplexml_import_dom($domDocument);
 
+        if (!$config instanceof SimpleXMLElement) {
+            throw new \RuntimeException(sprintf('Error loading configuration "%s"', $filename));
+        }
+
         /** @psalm-suppress MixedArgument */
         return new self(
             self::target($config->target),
@@ -86,7 +90,7 @@ final class Config
     {
         $schemaFiles = [];
 
-        foreach ($node->children() as $child) {
+        foreach ($node->children() ?? [] as $child) {
             $schemaFiles[] = (string)$child['name'];
         }
 
@@ -100,7 +104,7 @@ final class Config
     {
         $types = [];
 
-        foreach ($node->children() as $child) {
+        foreach ($node->children() ?? [] as $child) {
             $types[(string)$child['name']] = (string)$child;
         }
 
@@ -114,7 +118,7 @@ final class Config
     {
         $resolvers = [];
 
-        foreach ($node->children() as $child) {
+        foreach ($node->children() ?? [] as $child) {
             $resolvers[] = new Resolver((string)$child['type'], (string)$child['field']);
         }
 
