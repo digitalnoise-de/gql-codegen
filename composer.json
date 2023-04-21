@@ -19,7 +19,8 @@
         "phpunit/phpunit": "^9.5",
         "mikey179/vfsstream": "^1.6",
         "vimeo/psalm": "^5.9",
-        "roave/infection-static-analysis-plugin": "^1.15"
+        "roave/infection-static-analysis-plugin": "^1.15",
+        "rector/rector": "^0.15.25"
     },
     "authors": [
         {
