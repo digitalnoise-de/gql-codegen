@@ -60,7 +60,7 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
             $returnType = TypeDetailsFactoryForPhp80::create($resolver->returnType);
 
             $method = $class->addMethod($resolveMethodName);
-
+            $method->setPrivate();
             $method->setReturnType($returnType->phpType);
             $method->setReturnNullable($returnType->nullable);
 
