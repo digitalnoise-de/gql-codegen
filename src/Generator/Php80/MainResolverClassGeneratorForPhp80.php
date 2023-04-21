@@ -129,20 +129,22 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
             return sprintf('!%s instanceof \\%s', $variable, $type->className);
         }
 
-        if ($type->equals(ScalarType::STRING())) {
-            return sprintf('!is_string(%s)', $variable);
-        }
+        if ($type instanceof ScalarType) {
+            if ($type->equals(ScalarType::STRING())) {
+                return sprintf('!is_string(%s)', $variable);
+            }
 
-        if ($type->equals(ScalarType::BOOLEAN())) {
-            return sprintf('!is_bool(%s)', $variable);
-        }
+            if ($type->equals(ScalarType::BOOLEAN())) {
+                return sprintf('!is_bool(%s)', $variable);
+            }
 
-        if ($type->equals(ScalarType::INTEGER())) {
-            return sprintf('!is_int(%s)', $variable);
-        }
+            if ($type->equals(ScalarType::INTEGER())) {
+                return sprintf('!is_int(%s)', $variable);
+            }
 
-        if ($type->equals(ScalarType::FLOAT())) {
-            return sprintf('!is_float(%s)', $variable);
+            if ($type->equals(ScalarType::FLOAT())) {
+                return sprintf('!is_float(%s)', $variable);
+            }
         }
 
         throw new LogicException();
