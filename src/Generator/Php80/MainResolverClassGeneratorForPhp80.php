@@ -98,6 +98,8 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
             );
         }
 
+        $resolve->addBody('    default => throw new \RuntimeException(sprintf(\'There is no resolver for "%s.%s"\', $type, $field))');
+
         $resolve->addBody('};');
 
         $canResolve = $class->addMethod('canResolve');

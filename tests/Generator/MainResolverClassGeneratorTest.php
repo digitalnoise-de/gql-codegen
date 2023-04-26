@@ -142,6 +142,21 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
     /**
      * @test
      */
+    public function trying_to_resolve_unresolvable_field_should_end_in_exception(): void
+    {
+        $className  = $this->randomClassName();
+        $definition = new MainResolverDefinition($className, []);
+        $this->generateAndEvaluate($definition);
+        $mainResolver = new $className(new DummyResolver('A: '), new DummyResolver('B: '));
+
+        $this->expectExceptionMessage('There is no resolver for "Foo.bar"');
+
+        $mainResolver->resolve('Foo', 'bar', null, []);
+    }
+
+    /**
+     * @test
+     */
     public function canResolve_should_return_whether_a_field_is_resolvable(): void
     {
         $className  = $this->randomClassName();
