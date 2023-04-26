@@ -1,0 +1,13 @@
+pre-commit:
+    commands:
+        10-backend-psalm:
+            env:
+                PSALM_OPTIONS:
+            glob: "*.php"
+            run: echo {staged_files} >/dev/null && ./vendor/bin/psalm $PSALM_OPTIONS --no-cache
+        11-backend-rector:
+            glob: "*.php"
+            run: ./vendor/bin/rector process --dry-run {staged_files}
+        12-backend-phpunit:
+            glob: "*.php"
+            run: echo {staged_files} >/dev/null && ./vendor/bin/phpunit
