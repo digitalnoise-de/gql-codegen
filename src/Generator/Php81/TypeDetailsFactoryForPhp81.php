@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator\Generator\Php80;
+namespace GraphQLGenerator\Generator\Php81;
 
 use GraphQLGenerator\Generator\TypeDetails;
 use GraphQLGenerator\Type\ExistingClassType;
@@ -11,7 +11,7 @@ use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 
-final class TypeDetailsFactoryForPhp80
+final class TypeDetailsFactoryForPhp81
 {
     public static function create(Type $type): TypeDetails
     {

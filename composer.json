@@ -9,7 +9,7 @@
         "ext-simplexml": "*",
         "ext-libxml": "*",
         "webonyx/graphql-php": "^0.13 || ^14.6",
-        "nette/php-generator": "^3.5",
+        "nette/php-generator": "^4.0",
         "nikic/php-parser": "^4.10",
         "myclabs/php-enum": "^1.8",
         "symfony/console": "^5.3",

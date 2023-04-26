@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator\Generator\Php80;
+namespace GraphQLGenerator\Generator\Php81;
 
 use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
@@ -12,7 +12,7 @@ use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use Nette\PhpGenerator\PhpFile;
 
-final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGenerator
+final class MainResolverClassGeneratorForPhp81 implements MainResolverClassGenerator
 {
     public function generate(MainResolverDefinition $definition): GeneratedClass
     {
@@ -56,7 +56,7 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
 
             $resolveMethodName = sprintf('resolve%s', ucfirst($name));
 
-            $returnType = TypeDetailsFactoryForPhp80::create($resolver->returnType);
+            $returnType = TypeDetailsFactoryForPhp81::create($resolver->returnType);
 
             $method = $class->addMethod($resolveMethodName);
             $method->setPrivate();

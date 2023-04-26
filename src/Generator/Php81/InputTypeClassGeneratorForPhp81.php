@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator\Generator\Php80;
+namespace GraphQLGenerator\Generator\Php81;
 
 use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
@@ -13,21 +13,20 @@ use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\Property;
 
-final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
+final class InputTypeClassGeneratorForPhp81 implements InputTypeClassGenerator
 {
     public function generate(InputTypeDefinition $definition): GeneratedClass
     {
         $file = new PhpFile();
         $file->setStrictTypes(true);
         $class = $file->addClass($definition->className);
+        $class->setFinal(true);
 
         $class->addMember($this->constructorMethod($definition->fields));
         $class->addMember($this->factoryMethod($definition->fields));
 
         foreach ($definition->fields as $name => $type) {
-            $class->addMember($this->property($name, $type));
             $class->addMember($this->sanitizeMethod($name, $type));
 
             if ($type instanceof ListType) {
@@ -51,17 +50,16 @@ final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
         $method->setVisibility('public');
 
         foreach ($fields as $name => $type) {
-            $typeDetails = TypeDetailsFactoryForPhp80::create($type);
+            $typeDetails = TypeDetailsFactoryForPhp81::create($type);
 
-            $param = $method->addParameter($name);
+            $param = $method->addPromotedParameter($name);
+            $param->setReadOnly(true);
             $param->setType($typeDetails->phpType);
             $param->setNullable($typeDetails->nullable);
 
             if ($typeDetails->docBlockType !== null) {
                 $method->addComment(sprintf('@param %s $%s', $typeDetails->docBlockType, $name));
             }
-
-            $method->addBody(sprintf('$this->%s = $%s;', $name, $name));
         }
 
         return $method;
@@ -94,25 +92,9 @@ final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
         return sprintf('sanitize%s', ucfirst($name));
     }
 
-    private function property(string $name, Type $type): Property
-    {
-        $typeDetails = TypeDetailsFactoryForPhp80::create($type);
-
-        $property = new Property($name);
-        $property->setPublic();
-        $property->setType($typeDetails->phpType);
-        $property->setNullable($typeDetails->nullable);
-
-        if ($typeDetails->docBlockType !== null) {
-            $property->addComment(sprintf('@var %s', $typeDetails->docBlockType));
-        }
-
-        return $property;
-    }
-
     private function sanitizeMethod(string $name, Type $type): Method
     {
-        $typeDetails = TypeDetailsFactoryForPhp80::create($type);
+        $typeDetails = TypeDetailsFactoryForPhp81::create($type);
 
         $method = new Method($this->sanitizeMethodName($name));
         $method->setStatic(true);
@@ -217,7 +199,7 @@ final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
 
     private function sanitizeListElementMethod(string $name, Type $type): Method
     {
-        $typeDetails = TypeDetailsFactoryForPhp80::create($type);
+        $typeDetails = TypeDetailsFactoryForPhp81::create($type);
 
         $method = new Method($this->sanitizeListElementMethodName($name));
         $method->setStatic(true);

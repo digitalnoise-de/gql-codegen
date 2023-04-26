@@ -6,9 +6,9 @@ namespace GraphQLGenerator\Generator;
 use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Build\MainResolverDefinition;
 use GraphQLGenerator\Build\ResolverDefinition;
-use GraphQLGenerator\Generator\Php80\InputTypeClassGeneratorForPhp80;
-use GraphQLGenerator\Generator\Php80\MainResolverClassGeneratorForPhp80;
-use GraphQLGenerator\Generator\Php80\ResolverInterfaceGeneratorForPhp80;
+use GraphQLGenerator\Generator\Php81\InputTypeClassGeneratorForPhp81;
+use GraphQLGenerator\Generator\Php81\MainResolverClassGeneratorForPhp81;
+use GraphQLGenerator\Generator\Php81\ResolverInterfaceGeneratorForPhp81;
 
 final class ClassGenerator
 {
@@ -22,9 +22,9 @@ final class ClassGenerator
     public static function forPhp80(): self
     {
         return new self(
-            new InputTypeClassGeneratorForPhp80(),
-            new ResolverInterfaceGeneratorForPhp80(),
-            new MainResolverClassGeneratorForPhp80()
+            new InputTypeClassGeneratorForPhp81(),
+            new ResolverInterfaceGeneratorForPhp81(),
+            new MainResolverClassGeneratorForPhp81()
         );
     }
 

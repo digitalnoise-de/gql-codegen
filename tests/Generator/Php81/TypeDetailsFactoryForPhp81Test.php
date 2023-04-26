@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\GraphQLGenerator\Generator\Php80;
+namespace Tests\GraphQLGenerator\Generator\Php81;
 
-use GraphQLGenerator\Generator\Php80\TypeDetailsFactoryForPhp80;
+use GraphQLGenerator\Generator\Php81\TypeDetailsFactoryForPhp81;
 use GraphQLGenerator\Generator\TypeDetails;
 use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
@@ -14,9 +14,9 @@ use GraphQLGenerator\Type\Type;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \GraphQLGenerator\Generator\Php80\TypeDetailsFactoryForPhp80
+ * @covers \GraphQLGenerator\Generator\Php81\TypeDetailsFactoryForPhp81
  */
-final class TypeDetailsFactoryForPhp80Test extends TestCase
+final class TypeDetailsFactoryForPhp81Test extends TestCase
 {
     /**
      * @test
@@ -25,7 +25,7 @@ final class TypeDetailsFactoryForPhp80Test extends TestCase
      */
     public function type_details_generation(Type $type, TypeDetails $expected): void
     {
-        self::assertEquals($expected, TypeDetailsFactoryForPhp80::create($type));
+        self::assertEquals($expected, TypeDetailsFactoryForPhp81::create($type));
     }
 
     /**

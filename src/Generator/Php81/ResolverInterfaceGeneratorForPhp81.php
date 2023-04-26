@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator\Generator\Php80;
+namespace GraphQLGenerator\Generator\Php81;
 
 use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Generator\ResolverInterfaceGenerator;
 use Nette\PhpGenerator\PhpFile;
 
-final class ResolverInterfaceGeneratorForPhp80 implements ResolverInterfaceGenerator
+final class ResolverInterfaceGeneratorForPhp81 implements ResolverInterfaceGenerator
 {
     private const METHOD_NAME = '__invoke';
 
@@ -21,7 +21,7 @@ final class ResolverInterfaceGeneratorForPhp80 implements ResolverInterfaceGener
         $method = $class->addMethod(self::METHOD_NAME);
         $method->setPublic();
 
-        $returnType = TypeDetailsFactoryForPhp80::create($resolver->returnType);
+        $returnType = TypeDetailsFactoryForPhp81::create($resolver->returnType);
 
         $method->setReturnType($returnType->phpType);
         $method->setReturnNullable($returnType->nullable);
@@ -31,7 +31,7 @@ final class ResolverInterfaceGeneratorForPhp80 implements ResolverInterfaceGener
         }
 
         if ($resolver->valueType !== null) {
-            $valueType = TypeDetailsFactoryForPhp80::create($resolver->valueType);
+            $valueType = TypeDetailsFactoryForPhp81::create($resolver->valueType);
 
             $param = $method->addParameter('value');
             $param->setType($valueType->phpType);
