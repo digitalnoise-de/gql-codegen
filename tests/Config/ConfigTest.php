@@ -8,6 +8,7 @@ use GraphQLGenerator\Config\Resolver;
 use GraphQLGenerator\Config\Schema;
 use GraphQLGenerator\Config\Target;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 
@@ -29,6 +30,7 @@ final class ConfigTest extends TestCase
             xsi:noNamespaceSchemaLocation="gql-codegen.xsd">
     <target namespacePrefix="App\GraphQL" directory="src/GraphQL" />
     <schema>
+        <directory name="vfs://root/src/SchemaDirectory" />
         <file name="queries.graphql" />
         <file name="mutations.graphql" />
     </schema>
@@ -44,10 +46,30 @@ final class ConfigTest extends TestCase
         );
         $root->addChild($file);
 
+        $dir = new vfsStreamDirectory('SchemaDirectory');
+
+        $dirFile1 = new vfsStreamFile('first.graphql');
+        $dirFile2 = new vfsStreamFile('second.graphql');
+        $dirFile3 = new vfsStreamFile('wrong.format');
+
+        $dir->addChild($dirFile1);
+        $dir->addChild($dirFile2);
+        $dir->addChild($dirFile3);
+
+        $src = new vfsStreamDirectory('src');
+        $src->addChild($dir);
+
+        $root->addChild($src);
+
         $config = Config::fromXmlFile($file->url());
 
         self::assertEquals(new Target('App\\GraphQL', 'src/GraphQL'), $config->target);
-        self::assertEquals(new Schema(['queries.graphql', 'mutations.graphql']), $config->schema);
+        self::assertEquals(new Schema([
+            'vfs://root/src/SchemaDirectory/first.graphql',
+            'vfs://root/src/SchemaDirectory/second.graphql',
+            'queries.graphql',
+            'mutations.graphql'
+        ]), $config->schema);
         self::assertEquals(
             [
                 'Article' => 'App\\Model\\Article',

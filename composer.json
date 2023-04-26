@@ -12,7 +12,8 @@
         "nette/php-generator": "^3.5",
         "nikic/php-parser": "^4.10",
         "myclabs/php-enum": "^1.8",
-        "symfony/console": "^5.3"
+        "symfony/console": "^5.3",
+        "symfony/finder": "^5.3"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
@@ -40,5 +41,10 @@
     },
     "bin": [
         "gql-codegen"
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
+    }
 }
