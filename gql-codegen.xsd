@@ -7,6 +7,12 @@
     </xs:element>
 
     <xs:complexType name="gqlCodegenType">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="endpoint" type="endpointType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="endpointType">
         <xs:sequence>
             <xs:element name="target" type="targetType" minOccurs="1" maxOccurs="1" />
             <xs:element name="schema" type="schemaType" minOccurs="1" maxOccurs="1" />

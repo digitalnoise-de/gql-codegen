@@ -11,15 +11,10 @@ use Symfony\Component\Finder\Finder;
 final class Config
 {
     /**
-     * @param array<string, string> $types
-     * @param list<Resolver>        $resolvers
+     * @param list<Endpoint> $endpoints
      */
-    public function __construct(
-        public readonly Target $target,
-        public readonly Schema $schema,
-        public readonly array $types,
-        public readonly array $resolvers
-    ) {
+    public function __construct(public readonly array $endpoints)
+    {
     }
 
     /**
@@ -38,13 +33,7 @@ final class Config
             throw new \RuntimeException(sprintf('Error loading configuration "%s"', $filename));
         }
 
-        /** @psalm-suppress MixedArgument */
-        return new self(
-            self::target($config->target),
-            self::schema($config->schema),
-            self::types($config->types),
-            self::resolvers($config->resolvers)
-        );
+        return new self(self::endpoints($config));
     }
 
     /**
@@ -64,6 +53,31 @@ final class Config
             }
             libxml_clear_errors();
         }
+    }
+
+    /**
+     * @return list<Endpoint>
+     */
+    private static function endpoints(\SimpleXMLElement $node): array
+    {
+        $endpoints = [];
+
+        foreach ($node->children() ?? [] as $child) {
+            $endpoints[] = self::endpoint($child);
+        }
+
+        return $endpoints;
+    }
+
+    private static function endpoint(\SimpleXMLElement $node): Endpoint
+    {
+        /** @psalm-suppress MixedArgument */
+        return new Endpoint(
+            self::target($node->target),
+            self::schema($node->schema),
+            self::types($node->types),
+            self::resolvers($node->resolvers)
+        );
     }
 
     private static function target(\SimpleXMLElement $node): Target

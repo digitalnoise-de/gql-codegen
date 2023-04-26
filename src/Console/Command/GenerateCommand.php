@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GraphQLGenerator\Console\Command;
 
 use GraphQLGenerator\Config\Config;
+use GraphQLGenerator\Config\Endpoint;
 use GraphQLGenerator\DefaultClassNamer;
 use GraphQLGenerator\Generator\ClassGenerator;
 use GraphQLGenerator\Processor;
@@ -25,13 +26,24 @@ final class GenerateCommand extends Command
     {
         $config = Config::fromXmlFile('gql-codegen.xml');
 
-        $classNamer  = new DefaultClassNamer($config->target->namespacePrefix);
-        $classDumper = new Psr4ClassDumper($config->target->namespacePrefix, $config->target->directory);
+        foreach ($config->endpoints as $index => $endpoint) {
+            $output->writeln(sprintf('<info>Processing endpoint #%d</info>', $index + 1));
+
+            $this->processEndpoint($endpoint, $output);
+        }
+
+        return Command::SUCCESS;
+    }
+
+    private function processEndpoint(Endpoint $endpoint, OutputInterface $output): void
+    {
+        $classNamer  = new DefaultClassNamer($endpoint->target->namespacePrefix);
+        $classDumper = new Psr4ClassDumper($endpoint->target->namespacePrefix, $endpoint->target->directory);
 
         $buildDefinition = (new Processor($classNamer))->process(
-            $config->schema->content(),
-            $config->types,
-            $config->resolvers
+            $endpoint->schema->content(),
+            $endpoint->types,
+            $endpoint->resolvers
         );
 
         $classGenerator = ClassGenerator::forPhp80();
@@ -52,7 +64,5 @@ final class GenerateCommand extends Command
         }
 
         $classDumper->dump($classGenerator->mainResolver($buildDefinition->mainResolver));
-
-        return Command::SUCCESS;
     }
 }
