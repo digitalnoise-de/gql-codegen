@@ -31,11 +31,16 @@
     <xs:complexType name="schemaType">
         <xs:choice minOccurs="1" maxOccurs="unbounded">
             <xs:element name="file" type="fileType" />
+            <xs:element name="directory" type="directoryType" />
         </xs:choice>
     </xs:complexType>
 
     <xs:complexType name="fileType">
         <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="directoryType">
+        <xs:attribute name="name" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="typesType">

@@ -5,6 +5,7 @@ namespace GraphQLGenerator\Config;
 
 use DOMDocument;
 use SimpleXMLElement;
+use Symfony\Component\Finder\Finder;
 
 /**
  * @psalm-immutable
@@ -13,14 +14,15 @@ final class Config
 {
     /**
      * @param array<string, string> $types
-     * @param list<Resolver>        $resolvers
+     * @param list<Resolver> $resolvers
      */
     public function __construct(
         public readonly Target $target,
         public readonly Schema $schema,
-        public readonly array  $types,
-        public readonly array  $resolvers
-    ) {
+        public readonly array $types,
+        public readonly array $resolvers
+    )
+    {
     }
 
     /**
@@ -76,7 +78,13 @@ final class Config
     {
         $schemaFiles = [];
 
-        foreach ($node->children() ?? [] as $child) {
+        foreach ($node->children() ?? [] as $key => $child) {
+            if ($key === 'directory') {
+                $schemaFiles = [...$schemaFiles, ...self::directorySchemaFiles($child)];
+
+                continue;
+            }
+
             $schemaFiles[] = (string)$child['name'];
         }
 
@@ -109,5 +117,17 @@ final class Config
         }
 
         return $resolvers;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function directorySchemaFiles(SimpleXMLElement $child): array
+    {
+        $directory = (string)$child['name'];
+        $finder    = new Finder();
+        $finder->files()->name('*.graphql')->in($directory);
+
+        return array_map(fn(\SplFileInfo $fileInfo) => $fileInfo->getPathname(), iterator_to_array($finder, false));
     }
 }
