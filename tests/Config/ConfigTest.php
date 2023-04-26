@@ -68,7 +68,7 @@ final class ConfigTest extends TestCase
             'vfs://root/src/SchemaDirectory/first.graphql',
             'vfs://root/src/SchemaDirectory/second.graphql',
             'queries.graphql',
-            'mutations.graphql'
+            'mutations.graphql',
         ]), $config->schema);
         self::assertEquals(
             [

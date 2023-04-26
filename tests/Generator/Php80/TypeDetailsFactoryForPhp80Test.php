@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Tests\GraphQLGenerator\Generator\Php80;
 
-use Generator;
 use GraphQLGenerator\Generator\Php80\TypeDetailsFactoryForPhp80;
 use GraphQLGenerator\Generator\TypeDetails;
 use GraphQLGenerator\Type\ExistingClassType;
@@ -30,9 +29,9 @@ final class TypeDetailsFactoryForPhp80Test extends TestCase
     }
 
     /**
-     * @return Generator<string, array{0: Type, 1: TypeDetails}>
+     * @return \Generator<string, array{0: Type, 1: TypeDetails}>
      */
-    public function examples(): Generator
+    public function examples(): \Generator
     {
         yield 'string' => [
             new NonNullable(ScalarType::STRING()),

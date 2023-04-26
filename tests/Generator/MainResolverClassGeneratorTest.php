@@ -88,8 +88,8 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
      * @dataProvider valueCheckProvider
      */
     public function field_can_not_be_resolved_with_invalid_input_value(
-        Type   $valueType,
-        mixed  $input,
+        Type $valueType,
+        mixed $input,
         string $expectedType
     ): void {
         $className          = $this->randomClassName();
@@ -117,25 +117,25 @@ abstract class MainResolverClassGeneratorTest extends ClassGeneratorTestCase
         yield 'Class type with scalar value' => [
             new ExistingClassType(DummyValue::class),
             'bar',
-            DummyValue::class
+            DummyValue::class,
         ];
 
         yield 'Non nullable String with int value' => [
             new NonNullable(ScalarType::STRING()),
             1,
-            'string'
+            'string',
         ];
 
         yield 'String with int value' => [
             ScalarType::STRING(),
             1,
-            'string'
+            'string',
         ];
 
         yield 'Int with float value' => [
             ScalarType::INTEGER(),
             1.23,
-            'int'
+            'int',
         ];
     }
 

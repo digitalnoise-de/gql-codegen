@@ -8,6 +8,9 @@ pre-commit:
         11-backend-rector:
             glob: "*.php"
             run: ./vendor/bin/rector process --dry-run {staged_files}
-        12-backend-phpunit:
+        12-backend-php-cs-fixer:
+            glob: "*.php"
+            run: ./vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php {staged_files} && git add {staged_files}
+        13-backend-phpunit:
             glob: "*.php"
             run: echo {staged_files} >/dev/null && ./vendor/bin/phpunit

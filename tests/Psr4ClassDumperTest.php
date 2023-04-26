@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Tests\GraphQLGenerator;
 
-use Generator;
 use GraphQLGenerator\Generator\GeneratedClass;
 use GraphQLGenerator\Psr4ClassDumper;
 use org\bovigo\vfs\vfsStream;
@@ -33,9 +32,9 @@ final class Psr4ClassDumperTest extends TestCase
     }
 
     /**
-     * @return Generator<string, array{0: string, 1: string}>
+     * @return \Generator<string, array{0: string, 1: string}>
      */
-    public function invalidClassNameExamples(): Generator
+    public function invalidClassNameExamples(): \Generator
     {
         yield 'No namespace' => [
             'Foo',

@@ -10,7 +10,6 @@ use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
-use LogicException;
 use Nette\PhpGenerator\PhpFile;
 
 final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGenerator
@@ -73,7 +72,6 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
 
             $method->addParameter('args')
                 ->setType('array');
-
 
             if ($resolver->valueType !== null) {
                 $method->addBody(sprintf('    if (%s) {', $this->typeCheckFor($resolver->valueType, '$value')));
@@ -147,7 +145,7 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
             }
         }
 
-        throw new LogicException();
+        throw new \LogicException();
     }
 
     private function typeName(Type $type): string
@@ -164,6 +162,6 @@ final class MainResolverClassGeneratorForPhp80 implements MainResolverClassGener
             return $type->getValue();
         }
 
-        throw new LogicException();
+        throw new \LogicException();
     }
 }

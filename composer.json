@@ -21,7 +21,8 @@
         "mikey179/vfsstream": "^1.6",
         "vimeo/psalm": "^5.9",
         "roave/infection-static-analysis-plugin": "^1.15",
-        "rector/rector": "^0.15.25"
+        "rector/rector": "^0.15.25",
+        "friendsofphp/php-cs-fixer": "^3.16"
     },
     "authors": [
         {

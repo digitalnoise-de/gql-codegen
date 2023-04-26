@@ -9,8 +9,8 @@ namespace GraphQLGenerator\Generator;
 final class TypeDetails
 {
     public function __construct(
-        public readonly string  $phpType,
-        public readonly bool    $nullable,
+        public readonly string $phpType,
+        public readonly bool $nullable,
         public readonly ?string $docBlockType
     ) {
     }

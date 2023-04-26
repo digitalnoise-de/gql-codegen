@@ -28,7 +28,6 @@ use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
-use RuntimeException;
 
 final class Processor
 {
@@ -48,7 +47,7 @@ final class Processor
 
     /**
      * @param array<string, string> $types
-     * @param list<Resolver> $resolvers
+     * @param list<Resolver>        $resolvers
      */
     public function process(string $schemaContent, array $types, array $resolvers): BuildDefinition
     {
@@ -127,13 +126,13 @@ final class Processor
                 return $this->typeFor($type);
         }
 
-        throw new RuntimeException(sprintf('Unhandled type: %s', $type::class));
+        throw new \RuntimeException(sprintf('Unhandled type: %s', $type::class));
     }
 
     private function inputTypeFor(\GraphQL\Type\Definition\Type $type): GeneratedClassType
     {
         if (!isset($this->inputTypes[$type->name])) {
-            throw new RuntimeException(sprintf('No input type for %s', $type->name));
+            throw new \RuntimeException(sprintf('No input type for %s', $type->name));
         }
 
         return $this->inputTypes[$type->name];
@@ -142,7 +141,7 @@ final class Processor
     private function typeFor(\GraphQL\Type\Definition\Type $type): ExistingClassType
     {
         if (!isset($this->types[$type->name])) {
-            throw new RuntimeException(sprintf('No type for %s', $type->name));
+            throw new \RuntimeException(sprintf('No type for %s', $type->name));
         }
 
         return $this->types[$type->name];
@@ -160,17 +159,15 @@ final class Processor
         foreach ($resolvers as $resolver) {
             $type = $schema->getType($resolver->type);
             if ($type === null) {
-                throw new RuntimeException('Type does not exist: '.$resolver->type);
+                throw new \RuntimeException('Type does not exist: ' . $resolver->type);
             }
 
             if (!$type instanceof ObjectType) {
-                throw new RuntimeException('Invalid type: '.$type::class);
+                throw new \RuntimeException('Invalid type: ' . $type::class);
             }
 
             if (!$type->hasField($resolver->field)) {
-                throw new RuntimeException(
-                    sprintf('Field "%s" does not exist on type "%s"', $resolver->field, $type->name)
-                );
+                throw new \RuntimeException(sprintf('Field "%s" does not exist on type "%s"', $resolver->field, $type->name));
             }
 
             $result[] = $this->resolverDefinition($schema, $type, $type->getField($resolver->field));

@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Config;
 
-use Exception;
-
-final class ConfigInvalid extends Exception
+final class ConfigInvalid extends \Exception
 {
     public static function onLine(int $line, string $error): self
     {

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Tests\GraphQLGenerator\Generator;
 
-use Generator;
 use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Generator\InputTypeClassGenerator;
 use GraphQLGenerator\Type\GeneratedClassType;
@@ -82,7 +81,7 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
         self::assertPropertyHasType($expectedType, $className, 'prop');
     }
 
-    public function types(): Generator
+    public function types(): \Generator
     {
         yield 'Non-nullable String' => [
             new NonNullable(ScalarType::STRING()),
@@ -385,9 +384,9 @@ abstract class InputTypeClassGeneratorTest extends ClassGeneratorTestCase
     }
 
     /**
-     * @return Generator<string, array{0: array<string, Type>, 1: array<string, mixed>, 1: string}>
+     * @return \Generator<string, array{0: array<string, Type>, 1: array<string, mixed>, 1: string}>
      */
-    public function invalidInput(): Generator
+    public function invalidInput(): \Generator
     {
         $definition = [
             's' => new NonNullable(ScalarType::STRING()),

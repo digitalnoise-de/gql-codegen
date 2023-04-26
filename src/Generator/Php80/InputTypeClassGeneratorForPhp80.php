@@ -11,7 +11,6 @@ use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
-use LogicException;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\Property;
@@ -208,7 +207,7 @@ final class InputTypeClassGeneratorForPhp80 implements InputTypeClassGenerator
             }
         }
 
-        throw new LogicException(sprintf('Unsupported type of class %s', $type::class));
+        throw new \LogicException(sprintf('Unsupported type of class %s', $type::class));
     }
 
     private function sanitizeListElementMethodName(string $name): string

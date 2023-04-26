@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Config;
 
-use DOMDocument;
-use SimpleXMLElement;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -14,15 +12,14 @@ final class Config
 {
     /**
      * @param array<string, string> $types
-     * @param list<Resolver> $resolvers
+     * @param list<Resolver>        $resolvers
      */
     public function __construct(
         public readonly Target $target,
         public readonly Schema $schema,
         public readonly array $types,
         public readonly array $resolvers
-    )
-    {
+    ) {
     }
 
     /**
@@ -30,14 +27,14 @@ final class Config
      */
     public static function fromXmlFile(string $filename): self
     {
-        $domDocument = new DOMDocument();
+        $domDocument = new \DOMDocument();
         $domDocument->load($filename);
 
         self::validate($domDocument);
 
         $config = simplexml_import_dom($domDocument);
 
-        if (!$config instanceof SimpleXMLElement) {
+        if (!$config instanceof \SimpleXMLElement) {
             throw new \RuntimeException(sprintf('Error loading configuration "%s"', $filename));
         }
 
@@ -53,7 +50,7 @@ final class Config
     /**
      * @throws ConfigInvalid
      */
-    private static function validate(DOMDocument $document): void
+    private static function validate(\DOMDocument $document): void
     {
         $schemaFile = dirname(__DIR__, 2) . '/gql-codegen.xsd';
 
@@ -69,12 +66,12 @@ final class Config
         }
     }
 
-    private static function target(SimpleXMLElement $node): Target
+    private static function target(\SimpleXMLElement $node): Target
     {
         return new Target((string)$node['namespacePrefix'], (string)$node['directory']);
     }
 
-    private static function schema(SimpleXMLElement $node): Schema
+    private static function schema(\SimpleXMLElement $node): Schema
     {
         $schemaFiles = [];
 
@@ -94,7 +91,7 @@ final class Config
     /**
      * @return array<string, string>
      */
-    private static function types(SimpleXMLElement $node): array
+    private static function types(\SimpleXMLElement $node): array
     {
         $types = [];
 
@@ -108,7 +105,7 @@ final class Config
     /**
      * @return list<Resolver>
      */
-    private static function resolvers(SimpleXMLElement $node): array
+    private static function resolvers(\SimpleXMLElement $node): array
     {
         $resolvers = [];
 
@@ -122,12 +119,12 @@ final class Config
     /**
      * @return list<string>
      */
-    private static function directorySchemaFiles(SimpleXMLElement $child): array
+    private static function directorySchemaFiles(\SimpleXMLElement $child): array
     {
         $directory = (string)$child['name'];
         $finder    = new Finder();
         $finder->files()->name('*.graphql')->in($directory);
 
-        return array_map(fn(\SplFileInfo $fileInfo) => $fileInfo->getPathname(), iterator_to_array($finder, false));
+        return array_map(fn (\SplFileInfo $fileInfo) => $fileInfo->getPathname(), iterator_to_array($finder, false));
     }
 }

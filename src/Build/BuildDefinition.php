@@ -10,8 +10,8 @@ final class BuildDefinition
      * @param list<ResolverDefinition>  $resolvers
      */
     public function __construct(
-        public readonly array                  $inputTypes,
-        public readonly array                  $resolvers,
+        public readonly array $inputTypes,
+        public readonly array $resolvers,
         public readonly MainResolverDefinition $mainResolver
     ) {
     }

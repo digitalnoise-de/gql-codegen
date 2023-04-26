@@ -5,8 +5,6 @@ namespace Tests\GraphQLGenerator\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Exception;
-use ReflectionClass;
-use ReflectionException;
 
 final class ClassHasPublicProperty extends Constraint
 {
@@ -17,14 +15,14 @@ final class ClassHasPublicProperty extends Constraint
     protected function matches(mixed $other): bool
     {
         try {
-            $rc = new ReflectionClass($other);
+            $rc = new \ReflectionClass($other);
 
             if (!$rc->hasProperty($this->property)) {
                 return false;
             }
 
             return $rc->getProperty($this->property)->isPublic();
-        } catch (ReflectionException $e) {
+        } catch (\ReflectionException $e) {
             throw new Exception($e->getMessage(), (int)$e->getCode(), $e);
         }
     }

@@ -10,7 +10,6 @@ use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
-use LogicException;
 
 final class TypeDetailsFactoryForPhp80
 {
@@ -59,6 +58,6 @@ final class TypeDetailsFactoryForPhp80
             }
         }
 
-        throw new LogicException(sprintf('Unexpected type "%s"', $type::class));
+        throw new \LogicException(sprintf('Unexpected type "%s"', $type::class));
     }
 }
