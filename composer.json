@@ -12,8 +12,8 @@
         "nette/php-generator": "^4.0",
         "nikic/php-parser": "^4.10",
         "myclabs/php-enum": "^1.8",
-        "symfony/console": "^5.3",
-        "symfony/finder": "^5.3"
+        "symfony/console": "^5.3 || ^6.0",
+        "symfony/finder": "^5.3 || ^6.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
