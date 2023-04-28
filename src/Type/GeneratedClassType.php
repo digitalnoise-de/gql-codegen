@@ -6,7 +6,7 @@ namespace GraphQLGenerator\Type;
 /**
  * @psalm-immutable
  */
-final class GeneratedClassType implements ConcreteType, \Stringable
+final class GeneratedClassType implements ConcreteType
 {
     public function __construct(public readonly string $className)
     {

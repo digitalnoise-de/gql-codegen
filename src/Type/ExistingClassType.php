@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Type;
 
-final class ExistingClassType implements ConcreteType, \Stringable
+/**
+ * @psalm-immutable
+ */
+final class ExistingClassType implements ConcreteType
 {
     public function __construct(public readonly string $className)
     {

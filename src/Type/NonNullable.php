@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Type;
 
-final class NonNullable implements WrappingType, \Stringable
+/**
+ * @psalm-immutable
+ */
+final class NonNullable implements WrappingType
 {
     public function __construct(public readonly ListType|ConcreteType $elementType)
     {

@@ -3,18 +3,7 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator;
 
-use GraphQL\Type\Definition\BooleanType;
-use GraphQL\Type\Definition\CustomScalarType;
-use GraphQL\Type\Definition\EnumType;
-use GraphQL\Type\Definition\FieldDefinition;
-use GraphQL\Type\Definition\FloatType;
-use GraphQL\Type\Definition\IDType;
-use GraphQL\Type\Definition\InputObjectType;
-use GraphQL\Type\Definition\IntType;
-use GraphQL\Type\Definition\ListOfType;
-use GraphQL\Type\Definition\NonNull;
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\StringType;
+use GraphQL\Type\Definition as GraphQL;
 use GraphQL\Type\Schema;
 use GraphQL\Utils\BuildSchema;
 use GraphQLGenerator\Build\BuildDefinition;
@@ -28,6 +17,7 @@ use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
+use GraphQLGenerator\Type\UnionType;
 
 final class Processor
 {
@@ -58,7 +48,7 @@ final class Processor
         }
 
         foreach ($schema->getTypeMap() as $type) {
-            if ($type instanceof InputObjectType) {
+            if ($type instanceof GraphQL\InputObjectType) {
                 $this->inputTypes[$type->name] = new GeneratedClassType($this->classNamer->inputType($type->name));
             }
         }
@@ -78,7 +68,7 @@ final class Processor
         $result = [];
 
         foreach ($schema->getTypeMap() as $type) {
-            if ($type instanceof InputObjectType) {
+            if ($type instanceof GraphQL\InputObjectType) {
                 $result[] = $this->inputTypeDefinition($type);
             }
         }
@@ -86,7 +76,7 @@ final class Processor
         return $result;
     }
 
-    private function inputTypeDefinition(InputObjectType $type): InputTypeDefinition
+    private function inputTypeDefinition(GraphQL\InputObjectType $type): InputTypeDefinition
     {
         $fields = [];
         foreach ($type->getFields() as $field) {
@@ -96,25 +86,26 @@ final class Processor
         return new InputTypeDefinition($this->classNamer->inputType($type->name), $fields);
     }
 
-    private function convertType(\GraphQL\Type\Definition\Type $type): Type
+    private function convertType(GraphQL\Type $type): Type
     {
         return match (true) {
-            $type instanceof NonNull    => NonNullable::fromType($this->convertType($type->getWrappedType())),
-            $type instanceof ListOfType => ListType::fromType($this->convertType($type->getWrappedType())),
-            $type instanceof StringType,
-            $type instanceof IDType,
-            $type instanceof EnumType,
-            $type instanceof CustomScalarType => ScalarType::STRING(),
-            $type instanceof BooleanType      => ScalarType::BOOLEAN(),
-            $type instanceof IntType          => ScalarType::INTEGER(),
-            $type instanceof FloatType        => ScalarType::FLOAT(),
-            $type instanceof InputObjectType  => $this->inputTypeFor($type),
-            $type instanceof ObjectType       => $this->typeFor($type),
-            default                           => throw new \RuntimeException(sprintf('Unhandled type: %s', $type::class))
+            $type instanceof GraphQL\NonNull    => NonNullable::fromType($this->convertType($type->getWrappedType())),
+            $type instanceof GraphQL\ListOfType => ListType::fromType($this->convertType($type->getWrappedType())),
+            $type instanceof GraphQL\StringType,
+            $type instanceof GraphQL\IDType,
+            $type instanceof GraphQL\EnumType,
+            $type instanceof GraphQL\CustomScalarType => ScalarType::STRING(),
+            $type instanceof GraphQL\UnionType        => new UnionType(),
+            $type instanceof GraphQL\BooleanType      => ScalarType::BOOLEAN(),
+            $type instanceof GraphQL\IntType          => ScalarType::INTEGER(),
+            $type instanceof GraphQL\FloatType        => ScalarType::FLOAT(),
+            $type instanceof GraphQL\InputObjectType  => $this->inputTypeFor($type),
+            $type instanceof GraphQL\ObjectType       => $this->typeFor($type),
+            default                                   => throw new \RuntimeException(sprintf('Unhandled type: %s', $type::class))
         };
     }
 
-    private function inputTypeFor(\GraphQL\Type\Definition\Type $type): GeneratedClassType
+    private function inputTypeFor(GraphQL\Type $type): GeneratedClassType
     {
         if (!isset($this->inputTypes[$type->name])) {
             throw new \RuntimeException(sprintf('No input type for %s', $type->name));
@@ -123,7 +114,7 @@ final class Processor
         return $this->inputTypes[$type->name];
     }
 
-    private function typeFor(\GraphQL\Type\Definition\Type $type): ExistingClassType
+    private function typeFor(GraphQL\Type $type): ExistingClassType
     {
         if (!isset($this->types[$type->name])) {
             throw new \RuntimeException(sprintf('No type for %s', $type->name));
@@ -147,7 +138,7 @@ final class Processor
                 throw new \RuntimeException('Type does not exist: ' . $resolver->type);
             }
 
-            if (!$type instanceof ObjectType) {
+            if (!$type instanceof GraphQL\ObjectType) {
                 throw new \RuntimeException('Invalid type: ' . $type::class);
             }
 
@@ -163,8 +154,8 @@ final class Processor
 
     private function resolverDefinition(
         Schema $schema,
-        \GraphQL\Type\Definition\Type $type,
-        FieldDefinition $field
+        GraphQL\Type $type,
+        GraphQL\FieldDefinition $field
     ): ResolverDefinition {
         if ($schema->getQueryType() === $type || $schema->getMutationType() === $type) {
             $value = null;
@@ -187,10 +178,8 @@ final class Processor
         );
     }
 
-    private function argumentTypeDefinition(
-        \GraphQL\Type\Definition\Type $type,
-        FieldDefinition $field
-    ): InputTypeDefinition {
+    private function argumentTypeDefinition(GraphQL\Type $type, GraphQL\FieldDefinition $field): InputTypeDefinition
+    {
         $fields = [];
         foreach ($field->args as $arg) {
             $fields[$arg->name] = $this->convertType($arg->getType());
