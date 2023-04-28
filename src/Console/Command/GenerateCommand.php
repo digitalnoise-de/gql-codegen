@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Console\Command;
 
+use GraphQL\Utils\BuildSchema;
+use GraphQLGenerator\Build\BuildDefinitionFactory;
+use GraphQLGenerator\Build\DefaultClassNamer;
 use GraphQLGenerator\Config\Config;
 use GraphQLGenerator\Config\Endpoint;
-use GraphQLGenerator\DefaultClassNamer;
 use GraphQLGenerator\Generator\ClassGenerator;
-use GraphQLGenerator\Processor;
 use GraphQLGenerator\Psr4ClassDumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,8 +41,8 @@ final class GenerateCommand extends Command
         $classNamer  = new DefaultClassNamer($endpoint->target->namespacePrefix);
         $classDumper = new Psr4ClassDumper($endpoint->target->namespacePrefix, $endpoint->target->directory);
 
-        $buildDefinition = (new Processor($classNamer))->process(
-            $endpoint->schema->content(),
+        $buildDefinition = (new BuildDefinitionFactory($classNamer))->process(
+            BuildSchema::build($endpoint->schema->content()),
             $endpoint->types,
             $endpoint->resolvers
         );

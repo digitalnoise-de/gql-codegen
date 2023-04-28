@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator;
+namespace GraphQLGenerator\Build;
 
 final class DefaultClassNamer implements ClassNamer
 {

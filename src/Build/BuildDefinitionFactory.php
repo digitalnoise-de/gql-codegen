@@ -1,15 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace GraphQLGenerator;
+namespace GraphQLGenerator\Build;
 
 use GraphQL\Type\Definition as GraphQL;
 use GraphQL\Type\Schema;
-use GraphQL\Utils\BuildSchema;
-use GraphQLGenerator\Build\BuildDefinition;
-use GraphQLGenerator\Build\InputTypeDefinition;
-use GraphQLGenerator\Build\MainResolverDefinition;
-use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Config\Resolver;
 use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
@@ -19,7 +14,7 @@ use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
 use GraphQLGenerator\Type\UnionType;
 
-final class Processor
+final class BuildDefinitionFactory
 {
     /**
      * @var array<string, GeneratedClassType>
@@ -39,10 +34,8 @@ final class Processor
      * @param array<string, string> $types
      * @param list<Resolver>        $resolvers
      */
-    public function process(string $schemaContent, array $types, array $resolvers): BuildDefinition
+    public function process(Schema $schema, array $types, array $resolvers): BuildDefinition
     {
-        $schema = BuildSchema::build($schemaContent);
-
         foreach ($types as $type => $class) {
             $this->types[$type] = new ExistingClassType($class);
         }

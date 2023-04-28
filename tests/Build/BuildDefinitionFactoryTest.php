@@ -1,13 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\GraphQLGenerator;
+namespace Tests\GraphQLGenerator\Build;
 
+use GraphQL\Utils\BuildSchema;
+use GraphQLGenerator\Build\BuildDefinition;
+use GraphQLGenerator\Build\BuildDefinitionFactory;
+use GraphQLGenerator\Build\DefaultClassNamer;
 use GraphQLGenerator\Build\InputTypeDefinition;
 use GraphQLGenerator\Build\ResolverDefinition;
 use GraphQLGenerator\Config\Resolver;
-use GraphQLGenerator\DefaultClassNamer;
-use GraphQLGenerator\Processor;
 use GraphQLGenerator\Type\ExistingClassType;
 use GraphQLGenerator\Type\GeneratedClassType;
 use GraphQLGenerator\Type\ListType;
@@ -17,11 +19,11 @@ use GraphQLGenerator\Type\Type;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \GraphQLGenerator\Processor
+ * @covers \GraphQLGenerator\Build\BuildDefinitionFactory
  */
-final class ProcessorTest extends TestCase
+final class BuildDefinitionFactoryTest extends TestCase
 {
-    private Processor $subject;
+    private BuildDefinitionFactory $subject;
 
     /**
      * @test
@@ -34,7 +36,7 @@ type Query {
 }
 end;
 
-        $definition = $this->subject->process($schema, [], [new Resolver('Query', 'field')]);
+        $definition = $this->build($schema, [], [new Resolver('Query', 'field')]);
 
         self::assertEquals(
             new ResolverDefinition(
@@ -55,7 +57,7 @@ type Query {
 }
 end;
 
-        $definition = $this->subject->process($schema, [], [new Resolver('Query', 'field')]);
+        $definition = $this->build($schema, [], [new Resolver('Query', 'field')]);
 
         self::assertEquals(
             new ResolverDefinition(
@@ -78,7 +80,7 @@ end;
      *
      * @dataProvider inputTypeExamples
      *
-     * @testdox Input field with type $type should be converted to $expectedType
+     * @testdox      Input field with type $type should be converted to $expectedType
      */
     public function input_type(string $type, Type $expectedType): void
     {
@@ -92,7 +94,7 @@ input OtherInput {
 }
 end;
 
-        $definition = $this->subject->process($schema, [], []);
+        $definition = $this->build($schema, [], []);
 
         self::assertEquals($expectedType, $definition->inputTypes[0]->fields['value'] ?? null);
     }
@@ -120,7 +122,7 @@ type ObjectType {
 }
 end;
 
-        $definition = $this->subject->process(
+        $definition = $this->build(
             $schema,
             ['ObjectType' => 'My\\ObjectType'],
             [new Resolver('ObjectType', 'field')]
@@ -158,7 +160,7 @@ input InputB {
 }
 end;
 
-        $definition = $this->subject->process($schema, [], []);
+        $definition = $this->build($schema, [], []);
 
         self::assertEquals(
             [
@@ -169,10 +171,19 @@ end;
         );
     }
 
+    /**
+     * @param array<string, string> $types
+     * @param list<Resolver>        $resolvers
+     */
+    private function build(string $schema, array $types, array $resolvers): BuildDefinition
+    {
+        return $this->subject->process(BuildSchema::build($schema), $types, $resolvers);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->subject = new Processor(new DefaultClassNamer('T'));
+        $this->subject = new BuildDefinitionFactory(new DefaultClassNamer('T'));
     }
 }
