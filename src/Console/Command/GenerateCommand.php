@@ -41,7 +41,7 @@ final class GenerateCommand extends Command
         $classNamer  = new DefaultClassNamer($endpoint->target->namespacePrefix);
         $classDumper = new Psr4ClassDumper($endpoint->target->namespacePrefix, $endpoint->target->directory);
 
-        $buildDefinition = (new BuildDefinitionFactory($classNamer))->process(
+        $buildDefinition = (new BuildDefinitionFactory($classNamer))->create(
             BuildSchema::build($endpoint->schema->content()),
             $endpoint->types,
             $endpoint->resolvers

@@ -11,6 +11,7 @@ use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
+use GraphQLGenerator\Type\UnionType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -211,6 +212,16 @@ final class TypeDetailsFactoryForPhp81Test extends TestCase
         yield 'nullable list of nullable existing class' => [
             new ListType(new ExistingClassType('My\Classname')),
             new TypeDetails('array', true, 'list<\My\Classname|null>|null'),
+        ];
+
+        yield 'union type' => [
+            new NonNullable(new UnionType([new GeneratedClassType('Generated\Classname'), new ExistingClassType('Existing\Classname')])),
+            new TypeDetails('\Generated\Classname|\Existing\Classname', false, null),
+        ];
+
+        yield 'nullable union type' => [
+            new UnionType([new GeneratedClassType('Generated\Classname'), new ExistingClassType('Existing\Classname')]),
+            new TypeDetails('\Generated\Classname|\Existing\Classname', true, null),
         ];
     }
 }

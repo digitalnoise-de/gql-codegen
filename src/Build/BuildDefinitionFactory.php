@@ -34,7 +34,7 @@ final class BuildDefinitionFactory
      * @param array<string, string> $types
      * @param list<Resolver>        $resolvers
      */
-    public function process(Schema $schema, array $types, array $resolvers): BuildDefinition
+    public function create(Schema $schema, array $types, array $resolvers): BuildDefinition
     {
         foreach ($types as $type => $class) {
             $this->types[$type] = new ExistingClassType($class);
@@ -88,7 +88,7 @@ final class BuildDefinitionFactory
             $type instanceof GraphQL\IDType,
             $type instanceof GraphQL\EnumType,
             $type instanceof GraphQL\CustomScalarType => ScalarType::STRING(),
-            $type instanceof GraphQL\UnionType        => new UnionType(),
+            $type instanceof GraphQL\UnionType        => $this->unionTypeFor($type),
             $type instanceof GraphQL\BooleanType      => ScalarType::BOOLEAN(),
             $type instanceof GraphQL\IntType          => ScalarType::INTEGER(),
             $type instanceof GraphQL\FloatType        => ScalarType::FLOAT(),
@@ -96,6 +96,11 @@ final class BuildDefinitionFactory
             $type instanceof GraphQL\ObjectType       => $this->typeFor($type),
             default                                   => throw new \RuntimeException(sprintf('Unhandled type: %s', $type::class))
         };
+    }
+
+    private function unionTypeFor(GraphQL\UnionType $type): UnionType
+    {
+        return new UnionType(array_values(array_map($this->typeFor(...), $type->getTypes())));
     }
 
     private function inputTypeFor(GraphQL\Type $type): GeneratedClassType

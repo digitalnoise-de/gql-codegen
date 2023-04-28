@@ -16,6 +16,7 @@ use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
+use GraphQLGenerator\Type\UnionType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -41,6 +42,46 @@ end;
         self::assertEquals(
             new ResolverDefinition(
                 'T\\Resolver\\Query\\FieldResolver', 'Query', 'field', null, null, ScalarType::BOOLEAN()
+            ),
+            $definition->resolvers[0]
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function union_type(): void
+    {
+        $schema = <<<end
+type Query {
+    field: FooBar
+}
+
+union FooBar = Foo | Bar
+
+type Foo {
+    name: String
+}
+
+type Bar {
+    name: String
+}
+end;
+
+        $definition = $this->build(
+            $schema,
+            ['Foo' => 'Existing\\Foo', 'Bar' => 'Existing\\Bar'],
+            [new Resolver('Query', 'field')]
+        );
+
+        self::assertEquals(
+            new ResolverDefinition(
+                'T\\Resolver\\Query\\FieldResolver',
+                'Query',
+                'field',
+                null,
+                null,
+                new UnionType([new ExistingClassType('Existing\\Foo'), new ExistingClassType('Existing\\Bar')])
             ),
             $definition->resolvers[0]
         );
@@ -177,7 +218,7 @@ end;
      */
     private function build(string $schema, array $types, array $resolvers): BuildDefinition
     {
-        return $this->subject->process(BuildSchema::build($schema), $types, $resolvers);
+        return $this->subject->create(BuildSchema::build($schema), $types, $resolvers);
     }
 
     protected function setUp(): void

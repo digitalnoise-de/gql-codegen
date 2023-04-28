@@ -10,6 +10,7 @@ use GraphQLGenerator\Type\ListType;
 use GraphQLGenerator\Type\NonNullable;
 use GraphQLGenerator\Type\ScalarType;
 use GraphQLGenerator\Type\Type;
+use GraphQLGenerator\Type\UnionType;
 
 final class TypeDetailsFactoryForPhp81
 {
@@ -38,6 +39,18 @@ final class TypeDetailsFactoryForPhp81
 
         if ($type instanceof ExistingClassType) {
             return new TypeDetails('\\' . $type->className, $nullable, null);
+        }
+
+        if ($type instanceof UnionType) {
+            $phpType = implode(
+                '|',
+                array_map(
+                    static fn (GeneratedClassType|ExistingClassType $e) => '\\' . $e->className,
+                    $type->types
+                )
+            );
+
+            return new TypeDetails($phpType, $nullable, null);
         }
 
         if ($type instanceof ScalarType) {
