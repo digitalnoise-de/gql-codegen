@@ -24,7 +24,7 @@ final class GenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $config = Config::fromXmlFile('gql-codegen.xml');
+        $config = Config::fromXmlFile((string)$input->getOption('config'));
 
         foreach ($config->endpoints as $index => $endpoint) {
             $output->writeln(sprintf('<info>Processing endpoint #%d</info>', $index + 1));
@@ -55,11 +55,11 @@ final class GenerateCommand extends Command
 
         foreach ($buildDefinition->resolvers as $resolver) {
             if ($resolver->args !== null) {
-                $output->writeln(printf('- Generating %s', $resolver->args->className));
+                $output->writeln(sprintf('- Generating %s', $resolver->args->className));
                 $classDumper->dump($classGenerator->inputType($resolver->args));
             }
 
-            $output->writeln(printf('- Generating %s', $resolver->className));
+            $output->writeln(sprintf('- Generating %s', $resolver->className));
             $classDumper->dump($classGenerator->resolver($resolver));
         }
 
