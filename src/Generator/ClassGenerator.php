@@ -19,7 +19,7 @@ final class ClassGenerator
     ) {
     }
 
-    public static function forPhp80(): self
+    public static function forPhp81(): self
     {
         return new self(
             new InputTypeClassGeneratorForPhp81(),

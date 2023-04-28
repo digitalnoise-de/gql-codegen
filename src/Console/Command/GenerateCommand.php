@@ -46,7 +46,7 @@ final class GenerateCommand extends Command
             $endpoint->resolvers
         );
 
-        $classGenerator = ClassGenerator::forPhp80();
+        $classGenerator = ClassGenerator::forPhp81();
 
         foreach ($buildDefinition->inputTypes as $inputType) {
             $output->writeln(sprintf('- Generating %s', $inputType->className));
