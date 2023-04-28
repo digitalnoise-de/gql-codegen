@@ -98,35 +98,20 @@ final class Processor
 
     private function convertType(\GraphQL\Type\Definition\Type $type): Type
     {
-        if ($type instanceof NonNull) {
-            /** @psalm-suppress ArgumentTypeCoercion */
-            return new NonNullable($this->convertType($type->getWrappedType()));
-        }
-
-        if ($type instanceof ListOfType) {
-            /** @psalm-suppress ArgumentTypeCoercion */
-            return new ListType($this->convertType($type->getWrappedType()));
-        }
-
-        switch ($type::class) {
-            case StringType::class:
-            case IDType::class:
-            case EnumType::class:
-            case CustomScalarType::class:
-                return ScalarType::STRING();
-            case BooleanType::class:
-                return ScalarType::BOOLEAN();
-            case IntType::class:
-                return ScalarType::INTEGER();
-            case FloatType::class:
-                return ScalarType::FLOAT();
-            case InputObjectType::class:
-                return $this->inputTypeFor($type);
-            case ObjectType::class:
-                return $this->typeFor($type);
-        }
-
-        throw new \RuntimeException(sprintf('Unhandled type: %s', $type::class));
+        return match (true) {
+            $type instanceof NonNull    => NonNullable::fromType($this->convertType($type->getWrappedType())),
+            $type instanceof ListOfType => ListType::fromType($this->convertType($type->getWrappedType())),
+            $type instanceof StringType,
+            $type instanceof IDType,
+            $type instanceof EnumType,
+            $type instanceof CustomScalarType => ScalarType::STRING(),
+            $type instanceof BooleanType      => ScalarType::BOOLEAN(),
+            $type instanceof IntType          => ScalarType::INTEGER(),
+            $type instanceof FloatType        => ScalarType::FLOAT(),
+            $type instanceof InputObjectType  => $this->inputTypeFor($type),
+            $type instanceof ObjectType       => $this->typeFor($type),
+            default                           => throw new \RuntimeException(sprintf('Unhandled type: %s', $type::class))
+        };
     }
 
     private function inputTypeFor(\GraphQL\Type\Definition\Type $type): GeneratedClassType

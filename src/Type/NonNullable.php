@@ -3,10 +3,19 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Type;
 
-final class NonNullable implements Type, \Stringable
+final class NonNullable implements WrappingType, \Stringable
 {
-    public function __construct(public readonly ScalarType|GeneratedClassType|ExistingClassType|ListType $elementType)
+    public function __construct(public readonly ListType|ConcreteType $elementType)
     {
+    }
+
+    public static function fromType(Type $type): self
+    {
+        if ($type instanceof ListType || $type instanceof ConcreteType) {
+            return new self($type);
+        }
+
+        throw new \RuntimeException(sprintf('Expected %s or %s, got %s', ListType::class, ConcreteType::class, $type::class));
     }
 
     public function __toString(): string

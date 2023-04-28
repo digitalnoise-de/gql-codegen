@@ -3,6 +3,6 @@ declare(strict_types=1);
 
 namespace GraphQLGenerator\Type;
 
-interface Type extends \Stringable
+interface ConcreteType extends Type
 {
 }
